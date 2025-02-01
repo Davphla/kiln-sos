@@ -1020,4 +1020,72 @@ contract Vault is
         VaultStorage storage $ = _getVaultStorage();
         return IConnector($._connectorRegistry.get($._connectorName));
     }
+
+    /* -------------------------------------------------------------------------- */
+    /*                                   ORACLE                                   */
+    /* -------------------------------------------------------------------------- */
+
+    function _createOracleForward(uint256 forward_id) {
+
+    }
+
+    function getOracleResult() {
+
+    }
+
+
+    /* -------------------------------------------------------------------------- */
+    /*                              FORWARD CONTRACT                              */
+    /* -------------------------------------------------------------------------- */
+
+   struct Forward {
+        uint256 forwardId;
+        uint256 lockedExchangeRate;
+        uint256 endDate;
+        uint256 totalAmount;
+    }
+
+    mapping(uint256 => Forward) public forwardsContracts;
+    /// @notice Used to calculate ID
+    uint256 public forwardCounter = 0;
+
+    uint256 internal constant _LOCKED_EXCHANGE_RATE = 112;
+    uint8 internal constant _PERIOD = 90;
+    uint16 internal constant _END_DATE = block.timestamp + 90;
+    /// @dev -2 blocks before end of forward settlement
+    uint16 internal constant _SETUP_DATE = _END_DATE - 2;
+
+    /// @notice Create new forward contract object
+    function forwardSetUp(uint256 amount, uint256 lockedExchangeRate, uint256 endDate, uint256 oracleSpot, uint256 oracleForward) internal {
+        forwardCounter++;
+        forwards[forwardCounter] = Forward({
+            forwardId: forwardCounter,
+            lockedExchangeRate: lockedExchangeRate,
+            endDate: endDate,
+            totalAmount: amount
+            
+        });
+        // Additional logic to store Forward_ID, LockedExchangeRate, OracleSpot, TotalAmount
+    }
+
+    /// @notice Function to allow bank to launch a new forward with new terms
+    function newForwardRate() {
+        if (block.timestamp > _SETUP_DATE) {
+            // Banks should calculate new amount as Underlying_assets_Value + APY_Vault_Value * pro_rata
+            ForwardSetUp(Amount, LockedExchangeRate, EndDate, OracleSpot, OracleForward);
+        }
+    }
+
+    /// @notice Get the value of the new rate
+    //__FeeDispatcher_init_unchainedfunction getForwardValue(uint256 forwardId, uint256 amount) public view returns (uint256) {
+    //    Forward forward = forwards[forwardId];
+    //    uint256 oracleResult = getOracleResult();
+    //    uint256 value = (oracleResult * amount) / getTotalAssets();
+    //    return value;
+    //}
+
+    function withdraw() {
+
+    }
 }
+
