@@ -1,0 +1,305 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #f5f5f5;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.container {
+    background: white;
+    width: 100%;
+    max-width: 480px;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tab {
+    padding: 8px 16px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: #666;
+}
+
+.tab.active {
+    color: #ff5d00;
+    position: relative;
+}
+
+.tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #ff5d00;
+}
+
+.logo-section {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.logo {
+    width: 33%;
+    max-width: 160px;
+}
+
+.token-selection {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    gap: 20px;
+}
+
+.token-dropdown {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding-right: 20px;
+    border-right: 2px solid #ddd;
+}
+
+.token-icon, .venus-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+}
+
+.address {
+    color: #666;
+    font-size: 14px;
+}
+
+.deposit-section {
+    margin-bottom: 20px;
+}
+
+.input-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 10px;
+}
+
+.amount-input {
+    border: none;
+    font-size: 24px;
+    width: 60%;
+    outline: none;
+}
+
+.currency-selector {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.currency-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.balance {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #666;
+}
+
+.max-button {
+    background: none;
+    border: none;
+    color: #ff5d00;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.earn-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.apy {
+    display: flex;
+    flex-direction: column;
+}
+
+.apy-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: #ff5d00;
+}
+
+.apy-period {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 2px;
+}
+
+.via-selector {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.rewards-info {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.rewards-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    cursor: pointer;
+}
+
+.rewards-details {
+    padding: 15px;
+    border-top: 1px solid #eee;
+    font-size: 14px;
+}
+
+.rate-row, .rewards-row, .deposit-row, .receive-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.info-text {
+    margin-top: 20px;
+    font-size: 12px;
+    color: #666;
+    line-height: 1.5;
+}
+
+.info-text p {
+    margin-bottom: 8px;
+}
+
+.gas-fee {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.chain-switch {
+    text-align: center;
+    color: #ff5d00;
+    font-size: 14px;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.earn-button {
+    width: 100%;
+    padding: 15px;
+    background-color: #ff9b5d;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+.earn-button:hover {
+    background-color: #ff5d00;
+}
+
+.terms {
+    text-align: center;
+    font-size: 10px;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.powered-by {
+    text-align: center;
+    font-size: 12px;
+    color: #666;
+}
+
+.dropdown-arrow {
+    color: #666;
+    font-size: 12px;
+}
+
+/* Slider styles */
+#slider {
+    margin: 15px 0 10px;
+    width: 140px;
+    height: 3px;
+    background: #eee;
+    border: none;
+}
+
+#slider .ui-slider-handle {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ff5d00;
+    border: none;
+    top: -4px;
+    cursor: pointer;
+}
+
+.tick-mark {
+    position: absolute;
+    width: 1px;
+    height: 4px;
+    background: #eee;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Override jQuery UI slider styles */
+.ui-widget-content {
+    background: #eee !important;
+    border: none !important;
+}
+
+.ui-widget-header {
+    background: #ff5d00 !important;
+}

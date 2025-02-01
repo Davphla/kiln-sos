@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiln Interface</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="tabs">
+            <button class="tab">Overview</button>
+            <button class="tab active">Earn</button>
+            <button class="tab">Withdraw</button>
+        </div>
+
+        <div class="logo-section">
+            <img src="images/kiln_logo.svg" alt="Kiln" class="logo">
+        </div>
+
+        <div class="token-selection">
+            <div class="token-dropdown">
+                <img src="https://sepolia.etherscan.io/images/main/empty-token.png" alt="Sepolia" class="token-icon">
+                <span>Sepolia</span>
+                <span class="dropdown-arrow">▼</span>
+            </div>
+            <div class="address">0xEA2n...ReWA2D5</div>
+        </div>
+
+        <div class="deposit-section">
+            <div class="input-container">
+                <input type="number" placeholder="0.00" class="amount-input">
+                <div class="currency-selector">
+                    <img src="https://cryptologos.cc/logos/usd-coin-usdc-logo.png" alt="USDC" class="currency-icon">
+                    <span>USDC</span>
+                    <span class="dropdown-arrow">▼</span>
+                </div>
+            </div>
+            <div class="balance">
+                <span class="balance-amount">$0.00</span>
+                <span class="available">889.7400 USDC AVAILABLE</span>
+                <button class="max-button">MAX</button>
+            </div>
+        </div>
+
+        <div class="earn-section">
+            <div class="apy">
+                <span class="apy-value">6.90%</span>
+                <div class="apy-period">YEARLY</div>
+                <div class="apy-period">MONTHLY</div>
+                <div id="slider"></div>
+            </div>
+            <div class="via-selector">
+                <img src="https://venus.io/favicon.ico" alt="Venus" class="venus-icon">
+                <span>via Kiln Venus</span>
+                <span class="dropdown-arrow">▼</span>
+            </div>
+        </div>
+
+        <div class="rewards-info">
+            <div class="rewards-header">
+                <span>You will receive 0.0000 vkUSDC</span>
+                <span class="dropdown-arrow">▼</span>
+            </div>
+            <div class="rewards-details">
+                <div class="rate-row">
+                    <span>KILN VENUS RATE:</span>
+                    <span>1 USDC = 0.00 VKUSDC</span>
+                </div>
+                <div class="rewards-row">
+                    <span>REWARDS IN:</span>
+                    <span>USDC</span>
+                </div>
+                <div class="deposit-row">
+                    <span>DEPOSIT:</span>
+                    <span>0.0000 USDC ($0.00)</span>
+                </div>
+                <div class="receive-row">
+                    <span>RECEIVE:</span>
+                    <span>0.0000 VKUSDC ($0.00)</span>
+                </div>
+                <div class="info-text">
+                    <p>LEND YOUR USDC WITH VENUS AND EARN USDC REWARDS</p>
+                    <p>REWARDS ARE AUTOMATICALLY DISTRIBUTED EVERY BLOCK AND ACCRUE TO YOUR POSITION</p>
+                    <p>REQUEST WITHDRAW AT ANYTIME AND GET USDC IMMEDIATELY</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="gas-fee">
+            <div class="gas-label">EST. GAS FEE</div>
+            <div class="gas-amount">&lt;0.0001 BNB</div>
+        </div>
+
+        <div class="chain-switch">
+            Switch to BNB Smart Chain to earn USDC
+        </div>
+
+        <button class="earn-button">Earn</button>
+
+        <div class="terms">
+            BY CLICKING "EARN" YOU AGREE TO OUR TERMS OF USE AND UNDERSTAND THE RISK DISCLOSURES
+        </div>
+
+        <div class="powered-by">
+            POWERED BY KILN
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        $(function() {
+            $("#slider").slider({
+                min: 0,
+                max: 100,
+                step: 16.66,
+                create: function() {
+                    // Ajouter des crans visibles
+                    for (var i = 0; i <= 6; i++) {
+                        var position = (i * 16.66) + '%';
+                        $('<span class="tick-mark"></span>').css('left', position).appendTo($(this));
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
