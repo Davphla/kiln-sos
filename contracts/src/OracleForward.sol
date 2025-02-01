@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.7;
+pragma solidity ^0.8.2;
 
 import "@chainlink/contracts/src/v0.8/ChainlinkClient.sol";
-import "@chainlink/contracts/src/v0.8/interfaces/LinkTokenInterface.sol";
-import "@chainlink/contracts/src/v0.8/ConfirmedOwner.sol";
 
 contract ChainlinkHttpExample is ChainlinkClient, ConfirmedOwner {
     using Chainlink for Chainlink.Request;
