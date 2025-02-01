@@ -1,47 +1,54 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.2;
+// Oracle logic to call an external API
+// This is a placeholder for the actual implementation
+// You would need to use an oracle service like Chainlink to call an external API
+// Example using Chainlink's request and response pattern
+// Import ChainlinkClient
+pragma solidity 0.8.22;
 
 import "@chainlink/contracts/src/v0.8/ChainlinkClient.sol";
 
-contract ChainlinkHttpExample is ChainlinkClient, ConfirmedOwner {
+contract Vault is ChainlinkClient {
+    /* -------------------------------------------------------------------------- */
+    /*                                   ORACLE                                   */
+    /* -------------------------------------------------------------------------- */
     using Chainlink for Chainlink.Request;
-
-    // Variables
-    uint256 public apiData;
     address private oracle;
     bytes32 private jobId;
     uint256 private fee;
+    string constant API_URL = "API_URL_HERE";
+    string constant URL_PATH = "PATH";
 
-    // Events
-    event RequestFulfilled(bytes32 indexed requestId, uint256 indexed data);
-
-    constructor(address _link, address _oracle) ConfirmedOwner(msg.sender) {
-        setChainlinkToken(_link);
+    // Initialize Chainlink parameters
+    function setChainlinkParameters(
+        address _oracle,
+        bytes32 _jobId,
+        uint256 _fee
+    ) external onlyRole(DEFAULT_ADMIN_ROLE) {
         oracle = _oracle;
-        jobId = "b7283d075a5b4dbabb814c5b3bc351c6"; // Example Job ID (Replace with real one)
-        fee = 0.1 * 10**18; // 0.1 LINK fee
+        jobId = _jobId;
+        fee = _fee;
     }
 
-    // Function to request data from an API
-    function requestAPIData() public returns (bytes32 requestId) {
-        Chainlink.Request memory request = buildChainlinkRequest(jobId, address(this), this.fulfill.selector);
-        
-        // Example API: Replace with a real API URL and Path
-        request.add("get", "https://api.coindesk.com/v1/bpi/currentprice/ETH.json");
-        request.add("path", "bpi.ETH.rate_float"); // JSON response path
-
-        return sendChainlinkRequestTo(oracle, request, fee);
+    // Create a Chainlink request to retrieve API data
+    function _createOracleForward(uint256 forward_id) internal {
+        Chainlink.Request memory request = buildChainlinkRequest(
+            jobId,
+            address(this),
+            this.fulfill.selector
+        );
+        // Set the URL to perform the GET request on
+        request.add("get", API_URL);
+        request.add("path", URL_PATH);
+        sendChainlinkRequestTo(oracle, request, fee);
     }
 
-    // Callback function for Chainlink node
-    function fulfill(bytes32 _requestId, uint256 _data) public recordChainlinkFulfillment(_requestId) {
-        apiData = _data;
-        emit RequestFulfilled(_requestId, _data);
+    // Callback function to receive the API response
+    function fulfill(
+        bytes32 _requestId,
+        uint256 _oracleResult
+    ) public recordChainlinkFulfillment(_requestId) {
+        // Handle the oracle result
     }
 
-    // Withdraw LINK tokens from the contract
-    function withdrawLink() external onlyOwner {
-        LinkTokenInterface link = LinkTokenInterface(chainlinkTokenAddress());
-        require(link.transfer(msg.sender, link.balanceOf(address(this))), "Transfer failed");
-    }
+    function getOracleResult() {}
 }
