@@ -283,15 +283,17 @@ body {
     border: none;
     top: -4px;
     cursor: pointer;
+    margin-left: -5px;
 }
 
 .tick-mark {
     position: absolute;
-    width: 1px;
-    height: 4px;
-    background: #eee;
+    width: 2px;
+    height: 8px;
+    background: #e8e8e8;
     top: 50%;
     transform: translateY(-50%);
+    border-radius: 1px;
 }
 
 /* Override jQuery UI slider styles */
