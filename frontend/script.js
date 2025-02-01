@@ -1,69 +1,221 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // Tab switching
-    const tabs = document.querySelectorAll('.tab');
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            tabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-        });
-    });
+// Data structures for available options
+const networks = [
+    {
+        id: 'sepolia',
+        name: 'Sepolia',
+        icon: 'https://sepolia.etherscan.io/images/main/empty-token.png'
+    },
+    {
+        id: 'bnb',
+        name: 'BNB Smart Chain',
+        icon: 'https://cryptologos.cc/logos/bnb-bnb-logo.png'
+    },
+    {
+        id: 'ethereum',
+        name: 'Ethereum',
+        icon: 'https://cryptologos.cc/logos/ethereum-eth-logo.png'
+    }
+];
 
-    // MAX button functionality
-    const maxButton = document.querySelector('.max-button');
-    const amountInput = document.querySelector('.amount-input');
-    const availableAmount = 889.7400; // From the available USDC text
+const protocols = [
+    { 
+        id: 'kiln-morpho',
+        name: 'Kiln Morpho',
+        type: 'USDT Lending',
+        apy: '12.24%',
+        description: 'current NRR',
+        icon: 'images/venus.svg'
+    }
+];
 
-    maxButton.addEventListener('click', () => {
-        amountInput.value = availableAmount;
-        updateReceiveAmount();
-    });
+const assets = [
+    {
+        id: 'usdc-bnb',
+        symbol: 'USDC',
+        name: 'BNB Smart Chain',
+        balance: '889.74 USDC',
+        icon: 'https://cryptologos.cc/logos/usd-coin-usdc-logo.png'
+    },
+    {
+        id: 'usdc-op',
+        symbol: 'USDC',
+        name: 'OP Mainnet',
+        balance: '426.62 USDC',
+        icon: 'https://cryptologos.cc/logos/usd-coin-usdc-logo.png'
+    },
+    {
+        id: 'dai-base',
+        symbol: 'DAI',
+        name: 'Base',
+        balance: '0.00 DAI',
+        icon: 'https://cryptologos.cc/logos/multi-collateral-dai-dai-logo.png'
+    },
+    {
+        id: 'usdt-eth',
+        symbol: 'USDT',
+        name: 'Ethereum',
+        balance: '471.91 USDT',
+        icon: 'https://cryptologos.cc/logos/tether-usdt-logo.png'
+    },
+    {
+        id: 'usdc-arb',
+        symbol: 'USDC',
+        name: 'Arbitrum One',
+        balance: '0.00 USDC',
+        icon: 'https://cryptologos.cc/logos/usd-coin-usdc-logo.png'
+    },
+    {
+        id: 'eth-eth',
+        symbol: 'ETH',
+        name: 'Ethereum',
+        balance: '10.19 ETH',
+        icon: 'https://cryptologos.cc/logos/ethereum-eth-logo.png'
+    }
+];
 
-    // Amount input handling
-    amountInput.addEventListener('input', updateReceiveAmount);
+// Modal component
+class Modal {
+    constructor() {
+        this.modal = document.createElement('div');
+        this.modal.className = 'modal';
+        this.modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="back-button">←</button>
+                    <h2></h2>
+                    <input type="text" class="search-input" placeholder="">
+                </div>
+                <div class="modal-body"></div>
+            </div>
+        `;
+        document.body.appendChild(this.modal);
 
-    function updateReceiveAmount() {
-        const amount = parseFloat(amountInput.value) || 0;
-        const vkUSDCRate = 0; // Rate from KILN VENUS RATE
-        const vkUSDCAmount = amount * vkUSDCRate;
-        
-        // Update the receive amount display
-        document.querySelector('.rewards-header span').textContent = 
-            `You will receive ${vkUSDCAmount.toFixed(4)} vkUSDC`;
-        
-        // Update deposit and receive rows
-        document.querySelector('.deposit-row span:last-child').textContent = 
-            `${amount.toFixed(4)} USDC ($${amount.toFixed(2)})`;
-        document.querySelector('.receive-row span:last-child').textContent = 
-            `${vkUSDCAmount.toFixed(4)} VKUSDC ($${amount.toFixed(2)})`;
+        this.modal.querySelector('.back-button').addEventListener('click', () => this.hide());
+        this.searchInput = this.modal.querySelector('.search-input');
+        this.searchInput.addEventListener('input', (e) => this.handleSearch(e.target.value));
     }
 
-    // Rewards info dropdown
-    const rewardsHeader = document.querySelector('.rewards-header');
-    const rewardsDetails = document.querySelector('.rewards-details');
-    let rewardsExpanded = true; // Start expanded as shown in the image
+    show(title, placeholder, items, renderItem, onSelect) {
+        this.modal.querySelector('h2').textContent = title;
+        this.searchInput.placeholder = placeholder;
+        this.items = items;
+        this.renderItem = renderItem;
+        this.onSelect = onSelect;
+        this.renderItems(items);
+        this.modal.style.display = 'flex';
+    }
 
-    rewardsHeader.addEventListener('click', () => {
-        rewardsExpanded = !rewardsExpanded;
-        rewardsDetails.style.display = rewardsExpanded ? 'block' : 'none';
-        rewardsHeader.querySelector('.dropdown-arrow').textContent = 
-            rewardsExpanded ? '▼' : '▲';
+    hide() {
+        this.modal.style.display = 'none';
+    }
+
+    handleSearch(query) {
+        const filtered = this.items.filter(item => 
+            item.name.toLowerCase().includes(query.toLowerCase()) ||
+            item.symbol?.toLowerCase().includes(query.toLowerCase())
+        );
+        this.renderItems(filtered);
+    }
+
+    renderItems(items) {
+        const body = this.modal.querySelector('.modal-body');
+        body.innerHTML = items.map(item => this.renderItem(item)).join('');
+        body.querySelectorAll('.item').forEach(el => {
+            el.addEventListener('click', () => {
+                this.onSelect(items[el.dataset.index]);
+                this.hide();
+            });
+        });
+    }
+}
+
+// Initialize when document is ready
+document.addEventListener('DOMContentLoaded', () => {
+    const modal = new Modal();
+
+    // Add click handler for token dropdown
+    document.querySelector('.token-dropdown').addEventListener('click', () => {
+        modal.show(
+            'Select network',
+            'Search by network...',
+            networks,
+            (network, index) => `
+                <div class="item" data-index="${index}">
+                    <div class="item-left">
+                        <img src="${network.icon}" alt="${network.name}">
+                        <div class="item-info">
+                            <div class="item-name">${network.name}</div>
+                        </div>
+                    </div>
+                </div>
+            `,
+            (network) => {
+                document.querySelector('.token-dropdown img').src = network.icon;
+                document.querySelector('.token-dropdown span').textContent = network.name;
+            }
+        );
     });
 
-    // Earn button
-    const earnButton = document.querySelector('.earn-button');
-    earnButton.addEventListener('click', () => {
-        const amount = parseFloat(amountInput.value) || 0;
-        if (amount <= 0) {
-            alert('Please enter an amount greater than 0');
-            return;
-        }
-        if (amount > availableAmount) {
-            alert('Amount exceeds available balance');
-            return;
-        }
-        alert('Transaction initiated'); // In a real app, this would trigger the blockchain transaction
+    // Add click handler for MAX button
+    document.querySelector('.max-button').addEventListener('click', () => {
+        const availableText = document.querySelector('.available').textContent;
+        const amount = availableText.split(' ')[0];
+        document.querySelector('.amount-input').value = amount;
     });
 
-    // Initialize the rewards details visibility
-    rewardsDetails.style.display = 'block';
+    // Add click handlers for selectors
+    document.querySelector('.via-selector').addEventListener('click', () => {
+        modal.show(
+            'Select protocol',
+            'Search by protocol...',
+            protocols,
+            (protocol, index) => `
+                <div class="item" data-index="${index}">
+                    <div class="item-left">
+                        <img src="${protocol.icon}" alt="${protocol.name}">
+                        <div class="item-info">
+                            <div class="item-name">${protocol.name}</div>
+                            <div class="item-type">${protocol.type}</div>
+                        </div>
+                    </div>
+                    <div class="item-right">
+                        <div class="item-apy">${protocol.apy}</div>
+                        <div class="item-desc">${protocol.description}</div>
+                    </div>
+                </div>
+            `,
+            (protocol) => {
+                document.querySelector('.via-selector img').src = protocol.icon;
+                document.querySelector('.via-selector span').textContent = `via ${protocol.name}`;
+                document.querySelector('.apy-value').textContent = protocol.apy;
+            }
+        );
+    });
+
+    document.querySelector('.currency-selector').addEventListener('click', () => {
+        modal.show(
+            'Select asset',
+            'Search by asset...',
+            assets,
+            (asset, index) => `
+                <div class="item" data-index="${index}">
+                    <div class="item-left">
+                        <img src="${asset.icon}" alt="${asset.symbol}">
+                        <div class="item-info">
+                            <div class="item-name">${asset.symbol}</div>
+                            <div class="item-type">${asset.name}</div>
+                        </div>
+                    </div>
+                    <div class="item-right">
+                        <div class="item-balance">${asset.balance}</div>
+                    </div>
+                </div>
+            `,
+            (asset) => {
+                document.querySelector('.currency-selector img').src = asset.icon;
+                document.querySelector('.currency-selector span').textContent = asset.symbol;
+                document.querySelector('.available').textContent = `${asset.balance} AVAILABLE`;
+            }
+        );
+    });
 });
