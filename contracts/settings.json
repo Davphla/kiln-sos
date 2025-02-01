@@ -1,0 +1,40 @@
+{
+	"remappings": [
+		"forge-std/=lib/forge-std/src/",
+		"@openzeppelin/=lib/openzeppelin-contracts/contracts/",
+		"@openzeppelin-upgradeable/=lib/openzeppelin-contracts-upgradeable/contracts/",
+		"vulcan/=lib/vulcan/src/",
+		"deploy.sol/=lib/deploy.sol/src/",
+		"@openzeppelin/contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/contracts/",
+		"@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
+		"ds-test/=lib/vulcan/lib/forge-std/lib/ds-test/src/",
+		"erc4626-tests/=lib/openzeppelin-contracts-upgradeable/lib/erc4626-tests/",
+		"openzeppelin-contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/",
+		"openzeppelin-contracts/=lib/openzeppelin-contracts/",
+		"solmate/=lib/deploy.sol/lib/solmate/src/"
+	],
+	"optimizer": {
+		"enabled": true,
+		"runs": 200
+	},
+	"metadata": {
+		"useLiteralContent": false,
+		"bytecodeHash": "ipfs",
+		"appendCBOR": true
+	},
+	"outputSelection": {
+		"*": {
+			"*": [
+				"evm.bytecode",
+				"evm.deployedBytecode",
+				"devdoc",
+				"userdoc",
+				"metadata",
+				"abi"
+			]
+		}
+	},
+	"evmVersion": "paris",
+	"viaIR": false,
+	"libraries": {}
+}
