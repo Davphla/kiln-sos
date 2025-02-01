@@ -1021,17 +1021,6 @@ contract Vault is
         return IConnector($._connectorRegistry.get($._connectorName));
     }
 
-    /* -------------------------------------------------------------------------- */
-    /*                                   ORACLE                                   */
-    /* -------------------------------------------------------------------------- */
-
-    function _createOracleForward(uint256 forward_id) {
-
-    }
-
-    function getOracleResult() {
-
-    }
 
 
     /* -------------------------------------------------------------------------- */
