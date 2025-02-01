@@ -1,0 +1,3 @@
+[submodule "contracts/euler-vault-kit"]
+	path = contracts/euler-vault-kit
+	url = git@github.com:euler-xyz/euler-vault-kit.git
