@@ -93,20 +93,26 @@ class Modal {
         this.modal.querySelector('.back-button').addEventListener('click', () => this.hide());
         this.searchInput = this.modal.querySelector('.search-input');
         this.searchInput.addEventListener('input', (e) => this.handleSearch(e.target.value));
+        
+        this.selectedId = null;
     }
 
-    show(title, placeholder, items, renderItem, onSelect) {
+    show(title, placeholder, items, renderItem, onSelect, currentId = null) {
         this.modal.querySelector('h2').textContent = title;
         this.searchInput.placeholder = placeholder;
         this.items = items;
         this.renderItem = renderItem;
         this.onSelect = onSelect;
+        this.selectedId = currentId;
         this.renderItems(items);
         this.modal.style.display = 'flex';
+        this.searchInput.value = '';
+        this.searchInput.focus();
     }
 
     hide() {
         this.modal.style.display = 'none';
+        this.searchInput.value = '';
     }
 
     handleSearch(query) {
@@ -119,10 +125,20 @@ class Modal {
 
     renderItems(items) {
         const body = this.modal.querySelector('.modal-body');
-        body.innerHTML = items.map(item => this.renderItem(item)).join('');
+        body.innerHTML = items.map((item, index) => {
+            const isSelected = item.id === this.selectedId;
+            return `
+                <div class="item ${isSelected ? 'selected' : ''}" data-index="${index}">
+                    ${this.renderItem(item, index)}
+                </div>
+            `;
+        }).join('');
+        
         body.querySelectorAll('.item').forEach(el => {
             el.addEventListener('click', () => {
-                this.onSelect(items[el.dataset.index]);
+                const item = items[el.dataset.index];
+                this.selectedId = item.id;
+                this.onSelect(item);
                 this.hide();
             });
         });
@@ -133,6 +149,11 @@ class Modal {
 document.addEventListener('DOMContentLoaded', () => {
     const modal = new Modal();
 
+    // Track current selections
+    let currentNetwork = networks[0];
+    let currentAsset = assets[0];
+    let currentProtocol = protocols[0];
+
     // Add click handler for token dropdown
     document.querySelector('.token-dropdown').addEventListener('click', () => {
         modal.show(
@@ -140,19 +161,19 @@ document.addEventListener('DOMContentLoaded', () => {
             'Search by network...',
             networks,
             (network, index) => `
-                <div class="item" data-index="${index}">
-                    <div class="item-left">
-                        <img src="${network.icon}" alt="${network.name}">
-                        <div class="item-info">
-                            <div class="item-name">${network.name}</div>
-                        </div>
+                <div class="item-left">
+                    <img src="${network.icon}" alt="${network.name}">
+                    <div class="item-info">
+                        <div class="item-name">${network.name}</div>
                     </div>
                 </div>
             `,
             (network) => {
+                currentNetwork = network;
                 document.querySelector('.token-dropdown img').src = network.icon;
                 document.querySelector('.token-dropdown span').textContent = network.name;
-            }
+            },
+            currentNetwork.id
         );
     });
 
@@ -170,25 +191,25 @@ document.addEventListener('DOMContentLoaded', () => {
             'Search by protocol...',
             protocols,
             (protocol, index) => `
-                <div class="item" data-index="${index}">
-                    <div class="item-left">
-                        <img src="${protocol.icon}" alt="${protocol.name}">
-                        <div class="item-info">
-                            <div class="item-name">${protocol.name}</div>
-                            <div class="item-type">${protocol.type}</div>
-                        </div>
+                <div class="item-left">
+                    <img src="${protocol.icon}" alt="${protocol.name}">
+                    <div class="item-info">
+                        <div class="item-name">${protocol.name}</div>
+                        <div class="item-type">${protocol.type}</div>
                     </div>
-                    <div class="item-right">
-                        <div class="item-apy">${protocol.apy}</div>
-                        <div class="item-desc">${protocol.description}</div>
-                    </div>
+                </div>
+                <div class="item-right">
+                    <div class="item-apy">${protocol.apy}</div>
+                    <div class="item-desc">${protocol.description}</div>
                 </div>
             `,
             (protocol) => {
+                currentProtocol = protocol;
                 document.querySelector('.via-selector img').src = protocol.icon;
                 document.querySelector('.via-selector span').textContent = `via ${protocol.name}`;
                 document.querySelector('.apy-value').textContent = protocol.apy;
-            }
+            },
+            currentProtocol.id
         );
     });
 
@@ -198,24 +219,24 @@ document.addEventListener('DOMContentLoaded', () => {
             'Search by asset...',
             assets,
             (asset, index) => `
-                <div class="item" data-index="${index}">
-                    <div class="item-left">
-                        <img src="${asset.icon}" alt="${asset.symbol}">
-                        <div class="item-info">
-                            <div class="item-name">${asset.symbol}</div>
-                            <div class="item-type">${asset.name}</div>
-                        </div>
+                <div class="item-left">
+                    <img src="${asset.icon}" alt="${asset.symbol}">
+                    <div class="item-info">
+                        <div class="item-name">${asset.symbol}</div>
+                        <div class="item-type">${asset.name}</div>
                     </div>
-                    <div class="item-right">
-                        <div class="item-balance">${asset.balance}</div>
-                    </div>
+                </div>
+                <div class="item-right">
+                    <div class="item-balance">${asset.balance}</div>
                 </div>
             `,
             (asset) => {
+                currentAsset = asset;
                 document.querySelector('.currency-selector img').src = asset.icon;
                 document.querySelector('.currency-selector span').textContent = asset.symbol;
                 document.querySelector('.available').textContent = `${asset.balance} AVAILABLE`;
-            }
+            },
+            currentAsset.id
         );
     });
 });
