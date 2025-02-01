@@ -14,6 +14,18 @@ body {
     padding: 20px;
 }
 
+hr {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+p {
+    color: black;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 .container {
     background: white;
     width: 100%;
@@ -67,11 +79,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px;
-    border: 2px solid #ddd;
-    border-radius: 8px;
     margin-bottom: 20px;
-    gap: 20px;
+    gap: 10px;
 }
 
 .token-dropdown {
@@ -79,8 +88,17 @@ body {
     align-items: center;
     gap: 8px;
     cursor: pointer;
-    padding-right: 20px;
-    border-right: 2px solid #ddd;
+    padding: 8px 12px;
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 6px;
+}
+
+.address {
+    padding: 8px 12px;
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 6px;
 }
 
 .token-icon, .venus-icon {
@@ -138,43 +156,72 @@ body {
 .max-button {
     background: none;
     border: none;
-    color: #ff5d00;
+    color: black;
     cursor: pointer;
     font-weight: bold;
 }
 
 .earn-section {
+    margin-bottom: 15px;
+}
+
+.earn-header {
+    background: rgb(240, 240, 240);
+    border-radius: 8px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-}
-
-.apy {
-    display: flex;
-    flex-direction: column;
+    padding: 15px;
+    margin-bottom: 15px;
 }
 
 .apy-value {
     font-size: 24px;
     font-weight: bold;
     color: #ff5d00;
-}
-
-.apy-period {
-    font-size: 12px;
-    color: #666;
-    margin-bottom: 2px;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
 }
 
 .via-selector {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 12px;
-    border: 1px solid #eee;
-    border-radius: 8px;
+    padding: 6px 12px;
+    background: white;
+    border-radius: 6px;
     cursor: pointer;
+    border: 1px solid #eee;
+}
+
+.morpho-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.earn-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.period-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.period-label {
+    font-size: 12px;
+    color: #666;
+    font-weight: 500;
+}
+
+.period-value {
+    font-size: 12px;
+    color: #666;
 }
 
 .rewards-info {
@@ -195,6 +242,7 @@ body {
     padding: 15px;
     border-top: 1px solid #eee;
     font-size: 14px;
+    color: rgba(136, 136, 136, 1.00);
 }
 
 .rate-row, .rewards-row, .deposit-row, .receive-row {
@@ -206,12 +254,17 @@ body {
 .info-text {
     margin-top: 20px;
     font-size: 12px;
-    color: #666;
     line-height: 1.5;
 }
 
 .info-text p {
+    color: rgba(136, 136, 136, 1.00);
     margin-bottom: 8px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 14px;
+    letter-spacing: .5px;
+    text-transform: uppercase;
 }
 
 .gas-fee {

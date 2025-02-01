@@ -11,11 +11,6 @@
 </head>
 <body>
     <div class="container">
-        <div class="tabs">
-            <button class="tab">Overview</button>
-            <button class="tab active">Earn</button>
-            <button class="tab">Withdraw</button>
-        </div>
 
         <div class="logo-section">
             <img src="images/kiln_logo.svg" alt="Kiln" class="logo">
@@ -30,6 +25,8 @@
             <div class="address">0xEA2n...ReWA2D5</div>
         </div>
 
+        <hr/>
+        <p>Deposit</p>
         <div class="deposit-section">
             <div class="input-container">
                 <input type="number" placeholder="0.00" class="amount-input">
@@ -42,21 +39,31 @@
             <div class="balance">
                 <span class="balance-amount">$0.00</span>
                 <span class="available">889.7400 USDC AVAILABLE</span>
-                <button class="max-button">MAX</button>
+                <button class="max-button"><u>MAX</u></button>
             </div>
         </div>
 
+        <hr/>
+        <p>Earn</p>
         <div class="earn-section">
-            <div class="apy">
-                <span class="apy-value">6.90%</span>
-                <div class="apy-period">YEARLY</div>
-                <div class="apy-period">MONTHLY</div>
-                <div id="slider"></div>
+            <div class="earn-header">
+                <span class="apy-value">12.24%</span>
+                <div class="via-selector">
+                    <img src="images/venus.svg" alt="Morpho" class="morpho-icon">
+                    <span>via Kiln Morpho</span>
+                    <span class="dropdown-arrow">▼</span>
+                </div>
             </div>
-            <div class="via-selector">
-                <img src="https://venus.io/favicon.ico" alt="Venus" class="venus-icon">
-                <span>via Kiln Venus</span>
-                <span class="dropdown-arrow">▼</span>
+            <div id="slider"></div>
+            <div class="earn-details">
+                <div class="period-row">
+                    <span class="period-label">YEARLY</span>
+                    <span class="period-value">0.0000 USDT ($0.00)</span>
+                </div>
+                <div class="period-row">
+                    <span class="period-label">MONTHLY</span>
+                    <span class="period-value">0.0000 USDT ($0.00)</span>
+                </div>
             </div>
         </div>
 
