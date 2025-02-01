@@ -14,7 +14,6 @@ import {Create2} from "@openzeppelin/utils/Create2.sol";
 import {IERC20} from "@openzeppelin/token/ERC20/IERC20.sol";
 
 import {AddressNotContract} from "./Errors.sol";
-import {Reserve} from "./Vault.sol";
 
 /// @title Kiln DeFi Integration Vault Factory.
 /// @notice Factory to deploy new Vaults and initialize them.
@@ -56,7 +55,13 @@ contract ReserveFactory {
         bytes32 salt
     ) external returns (address) {
         Reserve.InitializationParams memory initializationParams = Reserve
-            .InitializationParams();
+            .InitializationParams({
+                amount: params.amount,
+                lockedExchangeRate: params.lockedExchangeRate,
+                endDate: params.endDate,
+                oracleSpot: params.oracleSpot,
+                oracleForward: params.oracleForward
+            });
 
         bytes memory _initCalldata = abi.encodeCall(
             Reserve.initialize,

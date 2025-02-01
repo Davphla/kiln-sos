@@ -16,7 +16,7 @@ remappings = [
     "forge-std/=lib/forge-std/src/",
     "@openzeppelin/=lib/openzeppelin-contracts/contracts/",
     "@openzeppelin-upgradeable/=lib/openzeppelin-contracts-upgradeable/contracts/",
-    "@smartcontractkit/foundry-chainlink-toolkit/=lib/foundry-chainlink-toolkit/contracts/v0.8.19/",
+    "@smartcontractkit/foundry-chainlink-toolkit/=lib/foundry-chainlink-toolkit/contracts/",
     "vulcan/=lib/vulcan/src/",
     "deploy.sol/=lib/deploy.sol/src/",
     "@openzeppelin/contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/contracts/",
@@ -28,5 +28,3 @@ remappings = [
     "solmate/=lib/deploy.sol/lib/solmate/src/",
 ]
 
-# Libraries (empty in your JSON config)
-[libraries]

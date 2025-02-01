@@ -1032,12 +1032,13 @@ contract Vault is
         uint256 amount;
         uint256 lockedExchangeRate;
         uint256 endDate;
-        address oracleSpot;
         address oracleForward; // callback
+        address oracleSpot; // callback
     }
 
     mapping(uint256 => address) public reservesContracts;
     uint256 public reserveCounter = 0;
+
 
     uint256 internal constant _LOCKED_EXCHANGE_RATE = 112;
     uint8 internal constant _PERIOD = 90;
@@ -1046,16 +1047,18 @@ contract Vault is
     uint16 internal constant _SETUP_DATE = _END_DATE - 2;
 
     /// @notice Function to allow bank to launch a new forward with new terms
-    function newForwardRate() public {
-        // if addr of the bank
+    function newForwardRate(uint256 contractId) public {
+        Reserve current = reservesContracts[contractId];
+        require(reservesContracts[contractId] != address(0), "Reserve contract does not exist");
+
         if (block.timestamp > _SETUP_DATE) {
             // Banks should calculate new amount as Underlying_assets_Value + APY_Vault_Value * pro_rata
-            address reserve = forwardSetUp();
+            address reserve = reserveSetUp();
         }
     }
 
     /// @notice Create new forward contract object
-    function forwardSetUp(uint256 amount, uint256 lockedExchangeRate, uint256 endDate) internal returns (address) {
+    function reserveSetUp(uint256 amount, uint256 lockedExchangeRate, uint256 endDate) internal returns (address) {
         Reserve reserve = Reserve({
             owner: msg.sender,
             id: reserveCounter,
