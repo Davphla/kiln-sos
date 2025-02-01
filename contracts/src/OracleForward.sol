@@ -5,7 +5,7 @@
 // Import ChainlinkClient
 pragma solidity 0.8.22;
 
-import "@chainlink/contracts/src/v0.8/ChainlinkClient.sol";
+import "../lib/chainlink-brownie-contracts/contracts/src/v0.8/ChainlinkClient.sol";
 
 contract Vault is ChainlinkClient {
     /* -------------------------------------------------------------------------- */
@@ -23,7 +23,7 @@ contract Vault is ChainlinkClient {
         address _oracle,
         bytes32 _jobId,
         uint256 _fee
-    ) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    ) external {
         oracle = _oracle;
         jobId = _jobId;
         fee = _fee;
@@ -31,15 +31,15 @@ contract Vault is ChainlinkClient {
 
     // Create a Chainlink request to retrieve API data
     function _createOracleForward(uint256 forward_id) internal {
-        Chainlink.Request memory request = buildChainlinkRequest(
+        Chainlink.Request memory request = _buildChainlinkRequest(
             jobId,
             address(this),
             this.fulfill.selector
         );
         // Set the URL to perform the GET request on
-        request.add("get", API_URL);
-        request.add("path", URL_PATH);
-        sendChainlinkRequestTo(oracle, request, fee);
+        request._add("get", API_URL);
+        request._add("path", URL_PATH);
+        _sendChainlinkRequestTo(oracle, request, fee);
     }
 
     // Callback function to receive the API response
@@ -50,5 +50,7 @@ contract Vault is ChainlinkClient {
         // Handle the oracle result
     }
 
-    function getOracleResult() {}
+    function getOracleResult() public {
+
+    }
 }
