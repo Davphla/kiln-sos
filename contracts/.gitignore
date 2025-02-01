@@ -3,7 +3,6 @@ out/
 artifacts/
 
 # Ignore dependency directories
-lib/
 modules/
 
 # Ignore Forge cache
