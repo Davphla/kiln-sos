@@ -141,6 +141,10 @@ p {
     align-items: center;
     gap: 8px;
     cursor: pointer;
+    padding: 8px 12px;
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 6px;
 }
 
 .currency-icon {
@@ -227,6 +231,28 @@ p {
     color: #666;
 }
 
+/* Slider Handle and Track */
+#slider .ui-slider-handle {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ff5d00;
+    border: none;
+    top: -4px;
+    cursor: pointer;
+    margin-left: -5px;
+}
+
+.tick-mark {
+    position: absolute;
+    width: 1px;
+    height: 6px;
+    background: #eee;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Other styles */
 .rewards-info {
     border: 1px solid #eee;
     border-radius: 8px;
@@ -331,41 +357,6 @@ p {
     color: #666;
 }
 
-.dropdown-arrow {
-    color: #666;
-    font-size: 12px;
-}
-
-/* Slider styles */
-#slider {
-    margin: 15px 0 10px;
-    width: 140px;
-    height: 3px;
-    background: #eee;
-    border: none;
-}
-
-#slider .ui-slider-handle {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #ff5d00;
-    border: none;
-    top: -4px;
-    cursor: pointer;
-    margin-left: -5px;
-}
-
-.tick-mark {
-    position: absolute;
-    width: 2px;
-    height: 8px;
-    background: #e8e8e8;
-    top: 50%;
-    transform: translateY(-50%);
-    border-radius: 1px;
-}
-
 /* Override jQuery UI slider styles */
 .ui-widget-content {
     background: #eee !important;
@@ -374,4 +365,50 @@ p {
 
 .ui-widget-header {
     background: #ff5d00 !important;
+}
+
+/* Hedge section styles */
+.hedge-section {
+    background: #f8f8f8;
+    border-radius: 8px;
+    padding: 8px;
+}
+
+.hedge-option {
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.hedge-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 4px;
+}
+
+.cost-text {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+}
+
+.reward-net {
+    text-align: right;
+}
+
+.reward-label {
+    display: block;
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 2px;
+}
+
+.reward-value {
+    display: block;
+    font-size: 28px;
+    font-weight: 600;
+    color: #2ecc71;
+    line-height: 1;
 }

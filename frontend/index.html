@@ -6,6 +6,7 @@
     <title>Kiln Interface</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="modal.css">
+    <link rel="stylesheet" href="withdraw.css">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
@@ -55,7 +56,6 @@
                     <span class="dropdown-arrow">▼</span>
                 </div>
             </div>
-            <div id="slider"></div>
             <div class="earn-details">
                 <div class="period-row">
                     <span class="period-label">YEARLY</span>
@@ -64,6 +64,34 @@
                 <div class="period-row">
                     <span class="period-label">MONTHLY</span>
                     <span class="period-value">0.0000 USDT ($0.00)</span>
+                </div>
+            </div>
+        </div>
+
+        <hr/>
+        <p>Currency withdraw</p>
+        <div class="withdraw-section">
+            <div class="withdraw-row">
+                <div class="currency-selector">
+                    <img src="https://cryptologos.cc/logos/usd-coin-usdc-logo.png" alt="USDC" class="currency-icon">
+                    <span>USDC</span>
+                    <span class="dropdown-arrow">▼</span>
+                </div>
+                <div id="slider"></div>
+            </div>
+            <div class="hedge-section">
+                <div class="hedge-left">
+                    <input type="checkbox" id="option1" class="custom-checkbox">
+                    <div class="activate-withdraw">
+                        <label for="option1">Hedge Currency</label>
+                        <p class="cost-text">Cost: --</p>
+                    </div>
+                </div>
+                <div class="hedge-right">
+                    <div class="reward-net">
+                        <span class="reward-label">Estimated net</span>
+                        <span class="reward-value">10.24%</span>
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,0 +1,117 @@
+/* Withdraw Section Styles */
+.withdraw-section {
+    margin-bottom: 20px;
+}
+
+.withdraw-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 15px;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.withdraw-row .currency-selector {
+    flex-shrink: 0;
+}
+
+#slider {
+    width: 200px;
+    height: 3px;
+    background: #eee;
+    border: none;
+    margin: 0;
+}
+
+.hedge-section {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8f8f8;
+    border-radius: 8px;
+    padding: 8px;
+    border: 1px solid black;
+}
+
+.custom-checkbox {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative;
+    margin: 10px;
+    transform: scale(1.5);
+    display: flex;
+    align-items: center;
+}
+
+.custom-checkbox:checked {
+    background-color: #ff5d00;
+    border-color: #ff5d00;
+}
+
+.custom-checkbox:checked::after {
+    content: '✓';
+    position: absolute;
+    color: white;
+    font-size: 12px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.hedge-option label {
+    font-size: 14px;
+    color: #333;
+}
+
+.hedge-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cost-text {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+}
+
+.reward-net {
+    text-align: right;
+}
+
+.reward-label {
+    display: block;
+    font-size: 11px;
+    color: #666;
+    margin-bottom: 2px;
+    text-align: center;
+}
+
+.reward-value {
+    display: block;
+    font-size: 28px;
+    font-weight: 600;
+    color: #2ecc71;
+    line-height: 1;
+}
+
+.hedge-left {
+    display: flex;
+    flex-direction: row;
+}
+
+.reward-net {
+    display: flex;
+    flex-direction: column;
+}
+
+.activate-withdraw {
+    margin: 5px;
+}
