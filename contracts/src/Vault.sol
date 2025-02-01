@@ -1021,21 +1021,23 @@ contract Vault is
         return IConnector($._connectorRegistry.get($._connectorName));
     }
 
-
-
     /* -------------------------------------------------------------------------- */
     /*                              RESERVE CONTRACT                              */
     /* -------------------------------------------------------------------------- */
 
     /// @notice 
    struct Reserve {
-
-        uint256 totalAmount;
+        address owner;
+        uint256 id;
+        uint256 amount;
         uint256 lockedExchangeRate;
         uint256 endDate;
+        address oracleSpot;
+        address oracleForward; // callback
     }
 
-    mapping(uint256 => address) public ReservesContracts;
+    mapping(uint256 => address) public reservesContracts;
+    uint256 public reserveCounter = 0;
 
     uint256 internal constant _LOCKED_EXCHANGE_RATE = 112;
     uint8 internal constant _PERIOD = 90;
@@ -1043,14 +1045,31 @@ contract Vault is
     /// @dev -2 blocks before end of forward settlement
     uint16 internal constant _SETUP_DATE = _END_DATE - 2;
 
-
     /// @notice Function to allow bank to launch a new forward with new terms
     function newForwardRate() public {
-        
+        // if addr of the bank
         if (block.timestamp > _SETUP_DATE) {
             // Banks should calculate new amount as Underlying_assets_Value + APY_Vault_Value * pro_rata
-            address reserve = ForwardSetUp(Amount, LockedExchangeRate, EndDate, OracleSpot, OracleForward);
+            address reserve = forwardSetUp();
         }
+    }
+
+    /// @notice Create new forward contract object
+    function forwardSetUp(uint256 amount, uint256 lockedExchangeRate, uint256 endDate) internal returns (address) {
+        Reserve reserve = Reserve({
+            owner: msg.sender,
+            id: reserveCounter,
+            amount: amount,
+            lockedExchangeRate: lockedExchangeRate,
+            endDate: endDate,
+            oracleSpot: 1, // TODO TN
+            oracleForward: 1 // TODO T0
+        });
+        // TODO Know how to call that function
+        address reserveAddr = createReserve(reserve);
+        reservesContracts[reserveCounter] = reserveAddr;
+        reserveCounter++;
+        return reserveAddr;
     }
 
     /// @notice Get the value of the new rate
@@ -1061,8 +1080,13 @@ contract Vault is
     //    return value;
     //}
 
-    function withdraw() {
-
-    }
+   // function totalAssets () {
+   //     //UnderlyingAssets.TotalAssets + (somme de tous les forwardvalue) : GetForwardValue(UnderlyingAssets.TotalAssets)
+   // } 
+//
+   // function withdraw() {
+   //     //uint256 prorata = amount 
+//
+   // }
 }
 

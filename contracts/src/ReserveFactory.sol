@@ -44,7 +44,7 @@ contract ReserveFactory {
         uint256 lockedExchangeRate;
         uint256 endDate;
         uint256 oracleSpot;
-        uint256 oracleForward;
+        address oracleForward; // callback
     }
 
     /// @notice Creates a new vault.
@@ -55,11 +55,11 @@ contract ReserveFactory {
         CreateReserveParams memory params,
         bytes32 salt
     ) external returns (address) {
-        Reserve.InitializationParams memory initializationParams = Vault
+        Reserve.InitializationParams memory initializationParams = Reserve
             .InitializationParams();
 
         bytes memory _initCalldata = abi.encodeCall(
-            Vault.initialize,
+            Reserve.initialize,
             initializationParams
         );
 
@@ -69,19 +69,8 @@ contract ReserveFactory {
         //    )
         //);
 
-        deployedVaults.push(Vault(_newVault));
-        emit VaultCreated(_newVault, params.name_);
+        deployedReserves.push(Reserve(_newVault));
+        emit ReserveCreated(_newVault, params.name_);
         return _newVault;
-    }
-
-    /// @notice Create new forward contract object
-    function forwardSetUp() internal returns () {
-        forwards[forwardCounter] = Forward({
-            forwardId: forwardCounter,
-            lockedExchangeRate: lockedExchangeRate,
-            endDate: endDate,
-            totalAmount: amount
-        });
-        // Additional logic to store Forward_ID, LockedExchangeRate, OracleSpot, TotalAmount
     }
 }
