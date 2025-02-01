@@ -127,11 +127,7 @@ class Modal {
         const body = this.modal.querySelector('.modal-body');
         body.innerHTML = items.map((item, index) => {
             const isSelected = item.id === this.selectedId;
-            return `
-                <div class="item ${isSelected ? 'selected' : ''}" data-index="${index}">
-                    ${this.renderItem(item, index)}
-                </div>
-            `;
+            return this.renderItem(item, index);
         }).join('');
         
         body.querySelectorAll('.item').forEach(el => {
@@ -160,14 +156,19 @@ document.addEventListener('DOMContentLoaded', () => {
             'Select network',
             'Search by network...',
             networks,
-            (network, index) => `
-                <div class="item-left">
-                    <img src="${network.icon}" alt="${network.name}">
-                    <div class="item-info">
-                        <div class="item-name">${network.name}</div>
+            (network, index) => {
+                const isSelected = network.id === currentNetwork.id;
+                return `
+                    <div class="item network-item ${isSelected ? 'selected' : ''}" data-index="${index}">
+                        <div class="item-left">
+                            <img src="${network.icon}" alt="${network.name}">
+                            <div class="item-info">
+                                <div class="item-name">${network.name}</div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            `,
+                `;
+            },
             (network) => {
                 currentNetwork = network;
                 document.querySelector('.token-dropdown img').src = network.icon;
@@ -190,19 +191,24 @@ document.addEventListener('DOMContentLoaded', () => {
             'Select protocol',
             'Search by protocol...',
             protocols,
-            (protocol, index) => `
-                <div class="item-left">
-                    <img src="${protocol.icon}" alt="${protocol.name}">
-                    <div class="item-info">
-                        <div class="item-name">${protocol.name}</div>
-                        <div class="item-type">${protocol.type}</div>
+            (protocol, index) => {
+                const isSelected = protocol.id === currentProtocol.id;
+                return `
+                    <div class="item ${isSelected ? 'selected' : ''}" data-index="${index}">
+                        <div class="item-left">
+                            <img src="${protocol.icon}" alt="${protocol.name}">
+                            <div class="item-info">
+                                <div class="item-name">${protocol.name}</div>
+                                <div class="item-type">${protocol.type}</div>
+                            </div>
+                        </div>
+                        <div class="item-right">
+                            <div class="item-apy">${protocol.apy}</div>
+                            <div class="item-desc">${protocol.description}</div>
+                        </div>
                     </div>
-                </div>
-                <div class="item-right">
-                    <div class="item-apy">${protocol.apy}</div>
-                    <div class="item-desc">${protocol.description}</div>
-                </div>
-            `,
+                `;
+            },
             (protocol) => {
                 currentProtocol = protocol;
                 document.querySelector('.via-selector img').src = protocol.icon;
@@ -213,23 +219,36 @@ document.addEventListener('DOMContentLoaded', () => {
         );
     });
 
+    // Add toggle functionality for rewards details
+    document.querySelector('.rewards-header').addEventListener('click', () => {
+        const details = document.querySelector('.rewards-details');
+        const arrow = document.querySelector('.rewards-header .dropdown-arrow');
+        details.classList.toggle('visible');
+        arrow.classList.toggle('rotated');
+    });
+
     document.querySelector('.currency-selector').addEventListener('click', () => {
         modal.show(
             'Select asset',
             'Search by asset...',
             assets,
-            (asset, index) => `
-                <div class="item-left">
-                    <img src="${asset.icon}" alt="${asset.symbol}">
-                    <div class="item-info">
-                        <div class="item-name">${asset.symbol}</div>
-                        <div class="item-type">${asset.name}</div>
+            (asset, index) => {
+                const isSelected = asset.id === currentAsset.id;
+                return `
+                    <div class="item ${isSelected ? 'selected' : ''}" data-index="${index}">
+                        <div class="item-left">
+                            <img src="${asset.icon}" alt="${asset.symbol}">
+                            <div class="item-info">
+                                <div class="item-name">${asset.symbol}</div>
+                                <div class="item-type">${asset.name}</div>
+                            </div>
+                        </div>
+                        <div class="item-right">
+                            <div class="item-balance">${asset.balance}</div>
+                        </div>
                     </div>
-                </div>
-                <div class="item-right">
-                    <div class="item-balance">${asset.balance}</div>
-                </div>
-            `,
+                `;
+            },
             (asset) => {
                 currentAsset = asset;
                 document.querySelector('.currency-selector img').src = asset.icon;
