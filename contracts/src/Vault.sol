@@ -1069,7 +1069,6 @@ contract Vault is
             oracleForward: 1 // TODO T0
         });
         // TODO Know how to call that function
-        address reserveAddr = createReserve(reserve);
         reservesContracts[reserveCounter] = reserveAddr;
         reserveCounter++;
         return reserveAddr;
@@ -1083,9 +1082,9 @@ contract Vault is
     //    return value;
     //}
 
-   // function totalAssets () {
-   //     //UnderlyingAssets.TotalAssets + (somme de tous les forwardvalue) : GetForwardValue(UnderlyingAssets.TotalAssets)
-   // } 
+   function totalAssets () {
+       //UnderlyingAssets.TotalAssets + (somme de tous les forwardvalue) : GetForwardValue(UnderlyingAssets.TotalAssets)
+   } 
 //
    // function withdraw() {
    //     //uint256 prorata = amount 

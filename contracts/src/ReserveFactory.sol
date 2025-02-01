@@ -12,8 +12,28 @@ pragma solidity 0.8.22;
 
 import {Create2} from "@openzeppelin/utils/Create2.sol";
 import {IERC20} from "@openzeppelin/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 import {AddressNotContract} from "./Errors.sol";
+
+contract ReserveContract {
+    address public owner;
+
+    struct reserveParams {
+        uint256 id;
+        uint256 amount;
+        uint256 lockedExchangeRate;
+        uint256 endDate;
+        address oracleForward; // callback
+        address oracleSpot; // callback
+    }
+    reserveParams public params;
+
+    constructor(address _owner, reserveParams memory _params) {
+        owner = _owner;
+        params = _params;
+    }
+}
 
 /// @title Kiln DeFi Integration Vault Factory.
 /// @notice Factory to deploy new Vaults and initialize them.
@@ -22,7 +42,17 @@ contract ReserveFactory {
     /*                                   STORAGE                                  */
     /* -------------------------------------------------------------------------- */
     /// @notice The list of deployed vaults.
-    Reserve[] public deployedReserves;
+    ReserveContract[] public deployedReserves;
+    address public owner;
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Not the owner");
+        _;
+    }
+
+    constructor() {
+        owner = msg.sender;
+    }
 
     /* -------------------------------------------------------------------------- */
     /*                                   EVENTS                                   */
@@ -30,32 +60,24 @@ contract ReserveFactory {
 
     /// @dev Emitted when a new vault is created.
     /// @param vault The address of the new vault.
-    /// @param name The name of the new vault.
-    event ReserveCreated(address indexed vault, string name);
+    /// @param id The id of the new vault.
+    event ReserveCreated(address indexed vault, uint256 id);
 
     /* -------------------------------------------------------------------------- */
     /*                                FACTORY LOGIC                               */
     /* -------------------------------------------------------------------------- */
-
-    /// @notice The parameters to create a new vault.
-    struct CreateReserveParams {
-        uint256 amount;
-        uint256 lockedExchangeRate;
-        uint256 endDate;
-        uint256 oracleSpot;
-        address oracleForward; // callback
-    }
 
     /// @notice Creates a new vault.
     /// @param params The parameters to initialize the vault.
     /// @param salt The salt for the Vault deployment with CREATE2.
     /// @return The address of the new vault.
     function createReserve(
-        CreateReserveParams memory params,
+        ReserveContract.reserveParams memory params,
         bytes32 salt
-    ) external returns (address) {
-        Reserve.InitializationParams memory initializationParams = Reserve
-            .InitializationParams({
+    ) external onlyOwner returns (address) {
+        ReserveContract.reserveParams
+            memory initializationParams = ReserveContract.reserveParams({
+                id: params.id,
                 amount: params.amount,
                 lockedExchangeRate: params.lockedExchangeRate,
                 endDate: params.endDate,
@@ -63,19 +85,16 @@ contract ReserveFactory {
                 oracleForward: params.oracleForward
             });
 
-        bytes memory _initCalldata = abi.encodeCall(
-            Reserve.initialize,
-            initializationParams
+        bytes memory bytecode = abi.encodePacked(
+            type(ReserveContract).creationCode,
+            abi.encode(msg.sender, initializationParams)
         );
 
-        //address payable _newVault = payable(
-        //    Create2.deploy(
-        //        0, salt, abi.encodePacked(type(VaultBeaconProxy).creationCode, abi.encode(vaultBeacon, _initCalldata))
-        //    )
-        //);
+        address payable _newReserve = payable(Create2.deploy(0, salt, bytecode));
 
-        deployedReserves.push(Reserve(_newVault));
-        emit ReserveCreated(_newVault, params.name_);
-        return _newVault;
+        //deployedReserves.push(Reserve(_newVault));
+        emit ReserveCreated(_newReserve, params.id);
+        //return _newVault;
+        return _newReserve;
     }
 }
