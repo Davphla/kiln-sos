@@ -21,9 +21,9 @@ We decided to worked on **Widget** and **DeFi** themes.
 
 # Deep inside 🚀
 
-![image](https://github.com/user-attachments/assets/3cda2aa6-f6ff-447e-8d25-d15cf2f462d3)
+![image](https://github.com/user-attachments/assets/4da7193b-9d30-4e5d-8f2d-9b1de883365f)
 
-![image](https://github.com/user-attachments/assets/34dafbdf-ca2e-4888-8ead-4f44426c7d33)
+![image](https://github.com/user-attachments/assets/9b0f82cb-a39a-45d5-91c5-10c4552c2a0b)
 
 ![image](https://github.com/user-attachments/assets/f6c492d8-fce3-4e9a-90a2-40b2d91d44ba)
 
