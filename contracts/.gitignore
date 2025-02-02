@@ -17,4 +17,4 @@ modules/
 Thumbs.db
 
 node_modules
-cache
+contracts/cache
