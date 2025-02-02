@@ -1376,8 +1376,7 @@ address _owner;
             totalAssets(),
             totalSupply()
         );
-        // 
-        _withdraw(_msgSender(), msg.sender, _owner, assets, nbShares);
+        _withdraw(_msgSender(), _owner, address(this), assets, nbShares);
         return uint256(profitAndLoss);
     }
 }
