@@ -43,8 +43,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             };
         }
 
-        // Handle hedge checkbox changes
-        document.querySelector('#option1').addEventListener('change', function() {
+        // Function to update values based on slider and checkbox state
+        function updateValues(isChecked) {
             const apyValue = document.querySelector('.apy-value');
             const rewardValue = document.querySelector('.reward-value');
             const costText = document.querySelector('.cost-text');
@@ -52,9 +52,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!apyValue || !rewardValue || !costText)
                 return;
 
-            if (!this.checked) {
+            if (!isChecked) {
                 rewardValue.textContent = '--%';
-                costText.textContent = 'Cost: --'
+                costText.textContent = 'Cost: --';
+                rewardValue.style.color = '#ff5d00'; // Orange
+                apyValue.style.textDecoration = 'none';
+                return;
             }
 
             const selectedCurrency = apyValue.textContent.replace('%', '').trim();
@@ -70,8 +73,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             const hedgeCostPercent = hedgeCost * 100;
             const netApy = originalApy - hedgeCostPercent;
             rewardValue.textContent = `${netApy.toFixed(2)}%`;
+            rewardValue.style.color = '#00FF00'; // Green
             costText.textContent = `Cost: ${hedgeCostPercent.toFixed(2)}% / ${sliderInfo.text}`;
             apyValue.style.textDecoration = 'line-through';
+        }
+
+        // Handle hedge checkbox changes
+        document.querySelector('#option1').addEventListener('change', function() {
+            updateValues(this.checked);
         });
 
         // Add click handler for token dropdown
@@ -189,6 +198,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             const index = Math.round(ui.value / 16.66);
             const periods = ["1 week", "1 month", "2 months", "3 months", "6 months", "9 months", "1 year"];
             $("#slider-value").text(periods[index]);
+            // Update values based on current checkbox state
+            const isChecked = document.querySelector('#option1').checked;
+            updateValues(isChecked);
         });
 
         // Currency selector in withdraw section
