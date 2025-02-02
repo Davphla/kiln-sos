@@ -1241,8 +1241,10 @@ contract Vault is
     uint256 internal constant _LOCKED_EXCHANGE_RATE = 112;
     uint256 internal _END_DATE;
     uint256 internal _SETUP_DATE;
+address _owner;
 
     constructor(address _reserveFactory) {
+        _owner = msg.sender;
         reserveFactory = _reserveFactory;
         oracleSpot = address(new OracleForward());
         _SETUP_DATE = _END_DATE - 2;
@@ -1281,7 +1283,7 @@ contract Vault is
     }
 
     /// @notice Function to allow bank to launch a new forward with new terms
-    function newForwardRate(uint256 contractId) public {
+    function newForwardRate(uint256 contractId) public view {
         address current = deployedReserves[contractId];
         require(current != address(0), "Reserve contract does not exist");
 
@@ -1317,7 +1319,7 @@ contract Vault is
 
     function claimBalance(address vaultAddress) internal {
         ReserveContract currentContract = ReserveContract(vaultAddress);
-        uint256 balance = currentContract.getBalance(address(this));
+        uint256 balance = IERC20(asset()).balanceOf(address(currentContract));
 
         require(balance > 0, "No balance to claim");
 
@@ -1330,7 +1332,8 @@ contract Vault is
     }
 
     function withdrawAmount(uint256 amount) public returns (uint256) {
-        NegativeResult[] memory negativeResults;
+        NegativeResult[] memory negativeResults = new NegativeResult[](deployedReserves.length);
+        uint count = 0;
         uint256 amount_vault_currency = amount *
             OracleForward(oracleSpot).getOracleSpot();
         uint amount_remaining = amount_vault_currency;
@@ -1346,7 +1349,8 @@ contract Vault is
             );
 
             if (result < 0) {
-                negativeResults.push(NegativeResult(i, result));
+                negativeResults[count] = (NegativeResult(i, result));
+                count++;
             } else {
                 claimBalance(deployedReserves[i]);
             }
@@ -1362,17 +1366,18 @@ contract Vault is
         }
         uint256 prorata = amount_vault_currency / totalAssets();
         
-        uint256 _shares = _convertToShares(
-            assets,
+        uint256 nbShares = IERC20(asset()).balanceOf(address(this));
+        nbShares = Math.ceilDiv(prorata * nbShares, 1);
+        
+
+        uint256 assets = _convertToAssets(
+            nbShares,
             Math.Rounding.Ceil,
-            _newTotalAssets,
+            totalAssets(),
             totalSupply()
         );
-        if (_shares == 0) revert PreviewZero();
-        _checkPartialShares(_shares);
-        _withdraw(_msgSender(), receiver, owner, assets, _shares);
-
-        //////
+        // 
+        _withdraw(_msgSender(), msg.sender, _owner, assets, nbShares);
         return uint256(profitAndLoss);
     }
 }

@@ -28,11 +28,21 @@ contract ReserveContract {
         address oracleForward; // callback
     }
     reserveParams public params;
+
     //address next;
 
     constructor(address _owner, reserveParams memory _params) {
         owner = _owner;
         params = _params;
+    }
+
+    function withdraw(uint256 amount, address to) external {
+        require(msg.sender == owner, "Not the owner");
+        require(amount <= params.remainingAmount, "Insufficient funds");
+
+        params.remainingAmount -= amount;
+        IERC20 token = IERC20(params.oracleForward);
+        require(token.transfer(to, amount), "Transfer failed");
     }
 }
 

@@ -19,35 +19,35 @@ contract OracleForward is ChainlinkClient {
     string constant URL_PATH = "PATH";
 
     // Initialize Chainlink parameters
-    function setChainlinkParameters(
-        address _oracle,
-        bytes32 _jobId,
-        uint256 _fee
-    ) external {
-        oracle = _oracle;
-        jobId = _jobId;
-        fee = _fee;
-    }
-
-    // Create a Chainlink request to retrieve API data
-    function _createOracleForward(uint256 forwardId) internal {
-        Chainlink.Request memory request = _buildChainlinkRequest(
-            jobId,
-            address(this),
-            this.fulfill.selector
-        );
-        // Set the URL to perform the GET request on
-        request._add("get", API_URL);
-        _sendChainlinkRequestTo(oracle, request, fee);
-    }
-
-    // Callback function to receive the API response
-    function fulfill(
-        bytes32 _requestId,
-        uint256 _oracleResult
-    ) public recordChainlinkFulfillment(_requestId) {
-        // Handle the oracle result
-    }
+    //function setChainlinkParameters(
+    //    address _oracle,
+    //    bytes32 _jobId,
+    //    uint256 _fee
+    //) external {
+    //    oracle = _oracle;
+    //    jobId = _jobId;
+    //    fee = _fee;
+    //}
+//
+    //// Create a Chainlink request to retrieve API data
+    //function _createOracleForward(uint256 forwardId) internal {
+    //    Chainlink.Request memory request = _buildChainlinkRequest(
+    //        jobId,
+    //        address(this),
+    //        this.fulfill.selector
+    //    );
+    //    // Set the URL to perform the GET request on
+    //    request._add("get", API_URL);
+    //    _sendChainlinkRequestTo(oracle, request, fee);
+    //}
+//
+    //// Callback function to receive the API response
+    //function fulfill(
+    //    bytes32 _requestId,
+    //    uint256 _oracleResult
+    //) public recordChainlinkFulfillment(_requestId) {
+    //    // Handle the oracle result
+    //}
 
     function getOracleResult() public pure returns (uint64){
         return 112;
