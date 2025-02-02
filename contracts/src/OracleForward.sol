@@ -7,7 +7,7 @@ pragma solidity 0.8.22;
 
 import "../lib/chainlink-brownie-contracts/contracts/src/v0.8/ChainlinkClient.sol";
 
-contract Vault is ChainlinkClient {
+contract OracleForward is ChainlinkClient {
     /* -------------------------------------------------------------------------- */
     /*                                   ORACLE                                   */
     /* -------------------------------------------------------------------------- */
@@ -49,8 +49,11 @@ contract Vault is ChainlinkClient {
         // Handle the oracle result
     }
 
-    function getOracleResult() public pure returns (int){
+    function getOracleResult() public pure returns (uint64){
         return 112;
+    }
 
+    function getOracleSpot() pure public returns (uint64) {
+        return 110;
     }
 }

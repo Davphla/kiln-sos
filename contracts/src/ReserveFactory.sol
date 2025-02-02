@@ -22,12 +22,13 @@ contract ReserveContract {
     struct reserveParams {
         uint256 id;
         uint256 amount;
+        uint256 remainingAmount;
         uint256 lockedExchangeRate;
         uint256 endDate;
         address oracleForward; // callback
-        address oracleSpot; // callback
     }
     reserveParams public params;
+    //address next;
 
     constructor(address _owner, reserveParams memory _params) {
         owner = _owner;
@@ -67,7 +68,6 @@ contract ReserveFactory {
     /*                                FACTORY LOGIC                               */
     /* -------------------------------------------------------------------------- */
 
-
     /// @notice Creates a new vault.
     /// @param params The parameters to initialize the vault.
     /// @param salt The salt for the Vault deployment with CREATE2.
@@ -80,20 +80,25 @@ contract ReserveFactory {
             memory initializationParams = ReserveContract.reserveParams({
                 id: params.id,
                 amount: params.amount,
+                remainingAmount: params.remainingAmount,
                 lockedExchangeRate: params.lockedExchangeRate,
                 endDate: params.endDate,
-                oracleSpot: params.oracleSpot,
                 oracleForward: params.oracleForward
             });
 
-        ReserveContract newContract = new ReserveContract(msg.sender, initializationParams);
+        ReserveContract newContract = new ReserveContract(
+            msg.sender,
+            initializationParams
+        );
         deployedReserves.push(newContract);
 
         bytes memory bytecode = abi.encodePacked(
             type(ReserveContract).creationCode,
             abi.encode(newContract)
         );
-        address payable _newReserve = payable(Create2.deploy(0, salt, bytecode));
+        address payable _newReserve = payable(
+            Create2.deploy(0, salt, bytecode)
+        );
 
         emit ReserveCreated(address(_newReserve), params.id);
         //return _newVault;

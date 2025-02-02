@@ -24,6 +24,8 @@ import {IConnector} from "./interfaces/IConnector.sol";
 import {ISanctionsList} from "./interfaces/ISanctionsList.sol";
 import {IConnectorRegistry} from "./interfaces/IConnectorRegistry.sol";
 import {FeeDispatcher, IFeeDispatcher} from "./abstracts/FeeDispatcher.sol";
+import {ReserveContract, ReserveFactory} from "./ReserveFactory.sol";
+import {OracleForward} from "./OracleForward.sol";
 
 /// @title Kiln DeFi Integration Vault.
 /// @notice ERC-4626 Vault depositing assets into a protocol.
@@ -302,7 +304,9 @@ contract Vault is
 
     /// @inheritdoc ERC4626Upgradeable
     function totalAssets() public view override returns (uint256) {
-        return _getConnector().totalAssets(IERC20Metadata(asset()));
+        return
+            _getConnector().totalAssets(IERC20Metadata(asset())) +
+            totalReserveAssets();
     }
 
     /// @inheritdoc ERC4626Upgradeable
@@ -1215,89 +1219,160 @@ contract Vault is
     /*                              RESERVE CONTRACT                              */
     /* -------------------------------------------------------------------------- */
 
-    /// @notice
-    struct Reserve {
-        address owner;
-        uint256 id;
-        uint256 amount;
-        uint256 lockedExchangeRate;
-        uint256 endDate;
-        address oracleForward; // callback
-        address oracleSpot; // callback
-    }
-
-    address reserveFactory;
-    mapping(uint256 => address) public reservesContracts;
+    address[] public deployedReserves;
     uint256 public reserveCounter = 0;
+    address public reserveFactory;
+    address oracleSpot;
+
+    /// @notice Get total assets of each reserves of the vault
+    function totalReserveAssets() public view returns (uint256) {
+        uint256 totalBalance = 0;
+        for (uint256 i = 0; i < deployedReserves.length; i++) {
+            if (deployedReserves[i] != address(0)) {
+                (, , uint256 remainingAmount, , , ) = ReserveContract(
+                    deployedReserves[i]
+                ).params();
+                totalBalance += getForwardValue(i, remainingAmount);
+            }
+        }
+        return totalBalance;
+    }
 
     uint256 internal constant _LOCKED_EXCHANGE_RATE = 112;
     uint256 internal _END_DATE;
     uint256 internal _SETUP_DATE;
 
     constructor(address _reserveFactory) {
-        _reserveFactory = _reserveFactory;
+        reserveFactory = _reserveFactory;
+        oracleSpot = address(new OracleForward());
         _SETUP_DATE = _END_DATE - 2;
         _END_DATE = block.timestamp + 90 days;
     }
-    
+
     /// @notice Create new forward contract object
-    function reserveSetUp(uint256 amount, uint256 lockedExchangeRate, uint256 endDate) internal returns (address) {
-        Reserve reserve = Reserve({
-            owner: msg.sender,
-            id: reserveCounter,
-            amount: amount,
-            lockedExchangeRate: lockedExchangeRate,
-            endDate: endDate,
-            oracleSpot: 1, // TODO TN
-            oracleForward: 1 // TODO T0
-        });
+    function reserveSetUp(
+        uint256 amount,
+        uint256 remainingAmount,
+        uint256 lockedExchangeRate,
+        uint256 endDate,
+        address oracleForward
+    ) internal returns (address) {
+        ReserveContract.reserveParams memory reserveParams = ReserveContract
+            .reserveParams({
+                id: reserveCounter,
+                amount: amount,
+                remainingAmount: remainingAmount,
+                lockedExchangeRate: lockedExchangeRate,
+                endDate: endDate,
+                oracleForward: oracleForward // T0
+            });
+
         bytes memory data = abi.encodeWithSelector(
-            ReserveFactory.createReserve.selector,
-            ReserveContract.reserveParams({
-            owner: reserve.owner,
-            id: reserve.id,
-            amount: reserve.amount,
-            lockedExchangeRate: reserve.lockedExchangeRate,
-            endDate: reserve.endDate,
-            oracleForward: reserve.oracleForward,
-            oracleSpot: reserve.oracleSpot
-            }),
+            ReserveFactory(reserveFactory).createReserve.selector,
+            reserveParams,
             bytes32(reserveCounter)
         );
         (bool success, bytes memory returnData) = reserveFactory.call(data);
         require(success, "Reserve creation failed");
         address reserveAddr = abi.decode(returnData, (address));
-        // TODO Know how to call that function
-        reservesContracts[reserveCounter] = reserveAddr;
+        deployedReserves[reserveCounter] = reserveAddr;
         reserveCounter++;
         return reserveAddr;
     }
 
     /// @notice Function to allow bank to launch a new forward with new terms
     function newForwardRate(uint256 contractId) public {
-        Reserve current = reservesContracts[contractId];
-        require(reservesContracts[contractId] != address(0), "Reserve contract does not exist");
-    
+        address current = deployedReserves[contractId];
+        require(current != address(0), "Reserve contract does not exist");
+
         if (block.timestamp > _SETUP_DATE) {
             // Banks should calculate new amount as Underlying_assets_Value + APY_Vault_Value * pro_rata
-            address reserve = reserveSetUp();
+            //address reserve = reserveSetUp();
         }
     }
 
-    /// @notice Get the value of the new rate
-    //__FeeDispatcher_init_unchainedfunction getForwardValue(uint256 forwardId, uint256 amount) public view returns (uint256) {
-    //    Forward forward = forwards[forwardId];
-    //    uint256 oracleResult = getOracleResult();
-    //    uint256 value = (oracleResult * amount) / getTotalAssets();
-    //    return value;
-    //}
+    /// @notice close forward vault if empty
+    function closeForward(uint256 id) public {
+        address a = deployedReserves[id];
+        require(a.balance == 0, "Non empty vault");
 
-    //function totalAssets () {
-    //    //UnderlyingAssets.TotalAssets + (somme de tous les forwardvalue) : GetForwardValue(UnderlyingAssets.TotalAssets)
-    //}
-    //
-    // function withdraw() {
-    //     //uint256 prorata = amount
-    //
-    // }
+        ReserveContract ctr = ReserveContract(a);
+        require(ctr.owner() == msg.sender, "Invalid user");
+
+        delete deployedReserves[id];
+    }
+
+    function getForwardValue(
+        uint256 forwardId,
+        uint256 amount
+    ) public view returns (uint256) {
+        ReserveContract forward = ReserveContract(deployedReserves[forwardId]);
+        (, , uint256 remainingAmount, , , address oracleForward) = forward
+            .params();
+        OracleForward oracle = OracleForward(oracleForward);
+        uint64 oracleValue = oracle.getOracleResult();
+
+        return (oracleValue * amount) / (remainingAmount);
+    }
+
+    function claimBalance(address vaultAddress) internal {
+        ReserveContract currentContract = ReserveContract(vaultAddress);
+        uint256 balance = currentContract.getBalance(address(this));
+
+        require(balance > 0, "No balance to claim");
+
+        currentContract.withdraw(balance, msg.sender);
+    }
+
+    struct NegativeResult {
+        uint vaultId;
+        int256 amount;
+    }
+
+    function withdrawAmount(uint256 amount) public returns (uint256) {
+        NegativeResult[] memory negativeResults;
+        uint256 amount_vault_currency = amount *
+            OracleForward(oracleSpot).getOracleSpot();
+        uint amount_remaining = amount_vault_currency;
+        int256 profitAndLoss = 0;
+
+        for (uint i = 0; i < deployedReserves.length; i++) {
+            ReserveContract currentContract = ReserveContract(
+                deployedReserves[i]
+            );
+            (, , uint256 remainingAmount, , , ) = currentContract.params();
+            int256 result = int256(
+                getForwardValue(i, Math.min(amount_remaining, remainingAmount))
+            );
+
+            if (result < 0) {
+                negativeResults.push(NegativeResult(i, result));
+            } else {
+                claimBalance(deployedReserves[i]);
+            }
+
+            profitAndLoss += result;
+
+            if (amount_remaining > remainingAmount) {
+                amount_remaining -= remainingAmount;
+                closeForward(i);
+            } else {
+                break;
+            }
+        }
+        uint256 prorata = amount_vault_currency / totalAssets();
+        
+        uint256 _shares = _convertToShares(
+            assets,
+            Math.Rounding.Ceil,
+            _newTotalAssets,
+            totalSupply()
+        );
+        if (_shares == 0) revert PreviewZero();
+        _checkPartialShares(_shares);
+        _withdraw(_msgSender(), receiver, owner, assets, _shares);
+
+        //////
+        return uint256(profitAndLoss);
+    }
 }
