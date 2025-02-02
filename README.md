@@ -4,7 +4,7 @@
 
 👋 Welcome to our project for [Kiln #1 Hackathon](https://www.kiln.fi/kiln-hackathon), held from January 31 to February 2, 2025, at the Kiln Office in **Paris**.
 
-The goal was to create a project around [Kiln products]((https://pitch.com/v/kilns-first-hackathon-welcome-j9hhy7/bbc26246-cd72-4ee3-83a7-19a8cec75c99)), specifically :
+The goal was to create a project around [Kiln products](https://pitch.com/v/kilns-first-hackathon-welcome-j9hhy7/bbc26246-cd72-4ee3-83a7-19a8cec75c99), specifically :
 - **Widget**: Seamless and customizable interface for staking and earning rewards directly in Kiln platform. 
 - **DeFi**: Access to leading DeFi protocols, enabling them to earn rewards on various assets through a unified and automated on-chain solution
 - Connect: Manage staking accounts programmatically, craft and broadcast transactions, and monitor real-time rewards and validator performance across multiple Proof-of-Stake (PoS) networks
