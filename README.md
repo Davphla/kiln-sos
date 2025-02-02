@@ -1,5 +1,6 @@
 ![image](https://github.com/user-attachments/assets/1108f412-2f26-4e40-8347-80d8bf38f2f0)
-# **[Kiln](https://www.kiln.fi/)** **S**wap **O**ptimize **S**ecure - 💻 Hackathon Project
+# **[Kiln](https://www.kiln.fi/)** - **S**wap **O**ptimize **S**ecure 
+## 💻 Hackathon Project
 
 
 👋 Welcome to our project for [Kiln Hackathon - #1](https://www.kiln.fi/kiln-hackathon), held from January 31 to February 2, 2025, at the Kiln Office in **Paris**.
