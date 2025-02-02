@@ -1,8 +1,8 @@
 ![image](https://github.com/user-attachments/assets/1108f412-2f26-4e40-8347-80d8bf38f2f0)
-# [Kiln](https://www.kiln.fi/) Swap Optimize Secure - Hackathon Project 💻
+# **[Kiln](https://www.kiln.fi/)** **S**wap **O**ptimize **S**ecure - 💻 Hackathon Project
 
 
-👋 Welcome to our project for [Kiln #1 Hackathon](https://www.kiln.fi/kiln-hackathon), held from January 31 to February 2, 2025, at the Kiln Office in **Paris**.
+👋 Welcome to our project for [#1 Kiln Hackathon](https://www.kiln.fi/kiln-hackathon), held from January 31 to February 2, 2025, at the Kiln Office in **Paris**.
 
 The goal was to create a project around [Kiln products](https://pitch.com/v/kilns-first-hackathon-welcome-j9hhy7/bbc26246-cd72-4ee3-83a7-19a8cec75c99), specifically :
 - **Widget**: Seamless and customizable interface for staking and earning rewards directly in Kiln platform. 
