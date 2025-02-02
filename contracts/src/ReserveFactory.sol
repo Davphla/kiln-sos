@@ -67,6 +67,7 @@ contract ReserveFactory {
     /*                                FACTORY LOGIC                               */
     /* -------------------------------------------------------------------------- */
 
+
     /// @notice Creates a new vault.
     /// @param params The parameters to initialize the vault.
     /// @param salt The salt for the Vault deployment with CREATE2.

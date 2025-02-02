@@ -49,7 +49,8 @@ contract Vault is ChainlinkClient {
         // Handle the oracle result
     }
 
-    function getOracleResult() public {
+    function getOracleResult() public pure returns (int){
+        return 112;
 
     }
 }

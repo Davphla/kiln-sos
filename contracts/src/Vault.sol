@@ -15,32 +15,11 @@ import {Address} from "@openzeppelin/utils/Address.sol";
 import {IERC20} from "@openzeppelin/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin/token/ERC20/utils/SafeERC20.sol";
 import {IERC20Metadata} from "@openzeppelin/interfaces/IERC20Metadata.sol";
-import {
-    ERC20Upgradeable,
-    ERC4626Upgradeable
-} from "@openzeppelin-upgradeable/token/ERC20/extensions/ERC4626Upgradeable.sol";
-import {AccessControlDefaultAdminRulesUpgradeable} from
-    "@openzeppelin-upgradeable/access/extensions/AccessControlDefaultAdminRulesUpgradeable.sol";
+import {ERC20Upgradeable, ERC4626Upgradeable} from "@openzeppelin-upgradeable/token/ERC20/extensions/ERC4626Upgradeable.sol";
+import {AccessControlDefaultAdminRulesUpgradeable} from "@openzeppelin-upgradeable/access/extensions/AccessControlDefaultAdminRulesUpgradeable.sol";
 import {ReentrancyGuardUpgradeable} from "@openzeppelin-upgradeable/utils/ReentrancyGuardUpgradeable.sol";
 
-import {
-    AmountZero,
-    AddressNotContract,
-    AddressSanctioned,
-    DepositPaused,
-    InvalidConnectorName,
-    MinimumTotalSupplyNotReached,
-    NoAdditionalRewardsClaimed,
-    NotDelegateCall,
-    NothingToCollect,
-    NotTransferable,
-    OffsetTooHigh,
-    PreviewZero,
-    RemainderNotZero,
-    TotalAssetsDecreased,
-    WrongManagementFee,
-    WrongPerformanceFee
-} from "./Errors.sol";
+import {AmountZero, AddressNotContract, AddressSanctioned, DepositPaused, InvalidConnectorName, MinimumTotalSupplyNotReached, NoAdditionalRewardsClaimed, NotDelegateCall, NothingToCollect, NotTransferable, OffsetTooHigh, PreviewZero, RemainderNotZero, TotalAssetsDecreased, WrongManagementFee, WrongPerformanceFee} from "./Errors.sol";
 import {IConnector} from "./interfaces/IConnector.sol";
 import {ISanctionsList} from "./interfaces/ISanctionsList.sol";
 import {IConnectorRegistry} from "./interfaces/IConnectorRegistry.sol";
@@ -72,7 +51,8 @@ contract Vault is
     bytes32 public constant FEE_MANAGER_ROLE = bytes32("FEE_MANAGER");
 
     /// @notice The role code for the sanctions manager.
-    bytes32 public constant SANCTIONS_MANAGER_ROLE = bytes32("SANCTIONS_MANAGER");
+    bytes32 public constant SANCTIONS_MANAGER_ROLE =
+        bytes32("SANCTIONS_MANAGER");
 
     /// @notice The role code for the claim manager.
     bytes32 public constant CLAIM_MANAGER_ROLE = bytes32("CLAIM_MANAGER");
@@ -127,7 +107,8 @@ contract Vault is
 
     /// @dev The storage slot of the VaultStorage struct in the proxy contract.
     ///      keccak256(abi.encode(uint256(keccak256("kiln.storage.vault")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant VaultStorageLocation = 0x6bb5a2a0ae924c2ea94f037035a09f65614421e2a7d96c9bcbd59acdd32e6000;
+    bytes32 private constant VaultStorageLocation =
+        0x6bb5a2a0ae924c2ea94f037035a09f65614421e2a7d96c9bcbd59acdd32e6000;
 
     /* -------------------------------------------------------------------------- */
     /*                                   EVENTS                                   */
@@ -242,7 +223,9 @@ contract Vault is
 
     /// @notice Initializes the contract in the proxy context.
     /// @param params The initialization parameters.
-    function initialize(InitializationParams calldata params) public onlyDelegateCall initializer {
+    function initialize(
+        InitializationParams calldata params
+    ) public onlyDelegateCall initializer {
         __ERC4626_init(params.asset_);
         emit AssetInitialized(params.asset_);
 
@@ -251,13 +234,21 @@ contract Vault is
         emit SymbolInitialized(params.symbol_);
 
         __ReentrancyGuard_init();
-        __AccessControlDefaultAdminRules_init(params.initialDelay_, params.initialDefaultAdmin_);
-        __FeeDispatcher_init(params.recipients_, IERC20Metadata(asset()).decimals());
+        __AccessControlDefaultAdminRules_init(
+            params.initialDelay_,
+            params.initialDefaultAdmin_
+        );
+        __FeeDispatcher_init(
+            params.recipients_,
+            IERC20Metadata(asset()).decimals()
+        );
 
         __Vault_init(params);
     }
 
-    function __Vault_init(InitializationParams memory params) internal onlyInitializing {
+    function __Vault_init(
+        InitializationParams memory params
+    ) internal onlyInitializing {
         __Vault_init_unchained(
             params.transferable_,
             params.connectorRegistry_,
@@ -351,39 +342,76 @@ contract Vault is
     }
 
     /// @inheritdoc ERC4626Upgradeable
-    function previewDeposit(uint256 assets) public view override returns (uint256) {
-        (uint256 _performanceFeeShares, uint256 _newTotalAssets) = _accruedPerformanceFeeShares();
-        (uint256 _shares,) = _previewDeposit(assets, _newTotalAssets, totalSupply() + _performanceFeeShares);
+    function previewDeposit(
+        uint256 assets
+    ) public view override returns (uint256) {
+        (
+            uint256 _performanceFeeShares,
+            uint256 _newTotalAssets
+        ) = _accruedPerformanceFeeShares();
+        (uint256 _shares, ) = _previewDeposit(
+            assets,
+            _newTotalAssets,
+            totalSupply() + _performanceFeeShares
+        );
         return _shares;
     }
 
     /// @inheritdoc ERC4626Upgradeable
-    function previewMint(uint256 shares) public view override returns (uint256) {
-        (uint256 _performanceFeeShares, uint256 _newTotalAssets) = _accruedPerformanceFeeShares();
-        (uint256 _assets,) = _previewMint(shares, _newTotalAssets, totalSupply() + _performanceFeeShares);
+    function previewMint(
+        uint256 shares
+    ) public view override returns (uint256) {
+        (
+            uint256 _performanceFeeShares,
+            uint256 _newTotalAssets
+        ) = _accruedPerformanceFeeShares();
+        (uint256 _assets, ) = _previewMint(
+            shares,
+            _newTotalAssets,
+            totalSupply() + _performanceFeeShares
+        );
         return _assets;
     }
 
     /// @inheritdoc ERC4626Upgradeable
-    function previewWithdraw(uint256 assets) public view override returns (uint256) {
-        (uint256 _performanceFeeShares, uint256 _newTotalAssets) = _accruedPerformanceFeeShares();
+    function previewWithdraw(
+        uint256 assets
+    ) public view override returns (uint256) {
+        (
+            uint256 _performanceFeeShares,
+            uint256 _newTotalAssets
+        ) = _accruedPerformanceFeeShares();
 
-        return assets.mulDiv(
-            totalSupply() + _performanceFeeShares + 10 ** _decimalsOffset(), _newTotalAssets + 1, Math.Rounding.Ceil
-        );
+        return
+            assets.mulDiv(
+                totalSupply() + _performanceFeeShares + 10 ** _decimalsOffset(),
+                _newTotalAssets + 1,
+                Math.Rounding.Ceil
+            );
     }
 
     /// @inheritdoc ERC4626Upgradeable
-    function previewRedeem(uint256 shares) public view override returns (uint256) {
-        (uint256 _performanceFeeShares, uint256 _newTotalAssets) = _accruedPerformanceFeeShares();
+    function previewRedeem(
+        uint256 shares
+    ) public view override returns (uint256) {
+        (
+            uint256 _performanceFeeShares,
+            uint256 _newTotalAssets
+        ) = _accruedPerformanceFeeShares();
 
-        return shares.mulDiv(
-            _newTotalAssets + 1, totalSupply() + _performanceFeeShares + 10 ** _decimalsOffset(), Math.Rounding.Floor
-        );
+        return
+            shares.mulDiv(
+                _newTotalAssets + 1,
+                totalSupply() + _performanceFeeShares + 10 ** _decimalsOffset(),
+                Math.Rounding.Floor
+            );
     }
 
     /// @inheritdoc ERC4626Upgradeable
-    function deposit(uint256 assets, address receiver)
+    function deposit(
+        uint256 assets,
+        address receiver
+    )
         public
         override
         nonReentrant
@@ -394,11 +422,16 @@ contract Vault is
         if (assets == 0) revert AmountZero();
 
         uint256 _maxAssets = _maxDeposit();
-        if (assets > _maxAssets) revert ERC4626ExceededMaxDeposit(receiver, assets, _maxAssets);
+        if (assets > _maxAssets)
+            revert ERC4626ExceededMaxDeposit(receiver, assets, _maxAssets);
 
         uint256 _newTotalAssets = _accruePerformanceFee();
 
-        (uint256 _shares, uint256 _managementFeeAmount) = _previewDeposit(assets, _newTotalAssets, totalSupply());
+        (uint256 _shares, uint256 _managementFeeAmount) = _previewDeposit(
+            assets,
+            _newTotalAssets,
+            totalSupply()
+        );
         if (_shares == 0) revert PreviewZero();
         _checkPartialShares(_shares);
 
@@ -408,7 +441,10 @@ contract Vault is
     }
 
     /// @inheritdoc ERC4626Upgradeable
-    function mint(uint256 shares, address receiver)
+    function mint(
+        uint256 shares,
+        address receiver
+    )
         public
         override
         nonReentrant
@@ -423,9 +459,14 @@ contract Vault is
         uint256 _newTotalSupply = totalSupply();
 
         uint256 _maxShares = _maxMint(_newTotalAssets, _newTotalSupply);
-        if (shares > _maxShares) revert ERC4626ExceededMaxMint(receiver, shares, _maxShares);
+        if (shares > _maxShares)
+            revert ERC4626ExceededMaxMint(receiver, shares, _maxShares);
 
-        (uint256 _assets, uint256 _managementFeeAmount) = _previewMint(shares, _newTotalAssets, _newTotalSupply);
+        (uint256 _assets, uint256 _managementFeeAmount) = _previewMint(
+            shares,
+            _newTotalAssets,
+            _newTotalSupply
+        );
         if (_assets == 0) revert PreviewZero();
 
         _deposit(_msgSender(), receiver, _assets, shares, _managementFeeAmount);
@@ -434,21 +475,25 @@ contract Vault is
     }
 
     /// @inheritdoc ERC4626Upgradeable
-    function withdraw(uint256 assets, address receiver, address owner)
-        public
-        override
-        nonReentrant
-        notSanctioned(msg.sender)
-        returns (uint256)
-    {
+    function withdraw(
+        uint256 assets,
+        address receiver,
+        address owner
+    ) public override nonReentrant notSanctioned(msg.sender) returns (uint256) {
         if (assets == 0) revert AmountZero();
 
         uint256 _maxAssets = _maxWithdraw(owner);
-        if (assets > _maxAssets) revert ERC4626ExceededMaxWithdraw(owner, assets, _maxAssets);
+        if (assets > _maxAssets)
+            revert ERC4626ExceededMaxWithdraw(owner, assets, _maxAssets);
 
         uint256 _newTotalAssets = _accruePerformanceFee();
 
-        uint256 _shares = _convertToShares(assets, Math.Rounding.Ceil, _newTotalAssets, totalSupply());
+        uint256 _shares = _convertToShares(
+            assets,
+            Math.Rounding.Ceil,
+            _newTotalAssets,
+            totalSupply()
+        );
         if (_shares == 0) revert PreviewZero();
         _checkPartialShares(_shares);
         _withdraw(_msgSender(), receiver, owner, assets, _shares);
@@ -457,23 +502,31 @@ contract Vault is
     }
 
     /// @inheritdoc ERC4626Upgradeable
-    function redeem(uint256 shares, address receiver, address owner)
-        public
-        override
-        nonReentrant
-        notSanctioned(msg.sender)
-        returns (uint256)
-    {
+    function redeem(
+        uint256 shares,
+        address receiver,
+        address owner
+    ) public override nonReentrant notSanctioned(msg.sender) returns (uint256) {
         if (shares == 0) revert AmountZero();
         _checkPartialShares(shares);
 
         uint256 _newTotalAssets = _accruePerformanceFee();
         uint256 _newTotalSupply = totalSupply();
 
-        uint256 _maxShares = _maxRedeem(owner, _newTotalAssets, _newTotalSupply);
-        if (shares > _maxShares) revert ERC4626ExceededMaxRedeem(owner, shares, _maxShares);
+        uint256 _maxShares = _maxRedeem(
+            owner,
+            _newTotalAssets,
+            _newTotalSupply
+        );
+        if (shares > _maxShares)
+            revert ERC4626ExceededMaxRedeem(owner, shares, _maxShares);
 
-        uint256 _assets = _convertToAssets(shares, Math.Rounding.Floor, _newTotalAssets, _newTotalSupply);
+        uint256 _assets = _convertToAssets(
+            shares,
+            Math.Rounding.Floor,
+            _newTotalAssets,
+            _newTotalSupply
+        );
         if (_assets == 0) revert PreviewZero();
         _withdraw(_msgSender(), receiver, owner, _assets, shares);
 
@@ -491,23 +544,38 @@ contract Vault is
     /// @param assets The amount of assets to deposit.
     /// @param shares The number of shares to mint.
     /// @param managementFeeAmount The amount of management fee in asset terms, calculated based on the deposit amount.
-    function _deposit(address caller, address receiver, uint256 assets, uint256 shares, uint256 managementFeeAmount)
-        internal
-    {
+    function _deposit(
+        address caller,
+        address receiver,
+        uint256 assets,
+        uint256 shares,
+        uint256 managementFeeAmount
+    ) internal {
         uint256 _balanceBefore = IERC20(asset()).balanceOf(address(this));
-        SafeERC20.safeTransferFrom(IERC20(asset()), caller, address(this), assets);
+        SafeERC20.safeTransferFrom(
+            IERC20(asset()),
+            caller,
+            address(this),
+            assets
+        );
         _mint(receiver, shares);
 
         VaultStorage storage $ = _getVaultStorage();
 
-        if (totalSupply() < $._minTotalSupply) revert MinimumTotalSupplyNotReached();
+        if (totalSupply() < $._minTotalSupply)
+            revert MinimumTotalSupplyNotReached();
 
         // Deposit to underlying protocol
         address _connector = $._connectorRegistry.getOrRevert($._connectorName);
         _connector.functionDelegateCall(
             abi.encodeCall(
                 IConnector.deposit,
-                (IERC20(asset()), IERC20(asset()).balanceOf(address(this)) - _balanceBefore - managementFeeAmount)
+                (
+                    IERC20(asset()),
+                    IERC20(asset()).balanceOf(address(this)) -
+                        _balanceBefore -
+                        managementFeeAmount
+                )
             )
         );
 
@@ -523,10 +591,13 @@ contract Vault is
     /// @param owner The owner of the shares to redeem.
     /// @param assets The amount of assets to withdraw from the underlying protocol.
     /// @param shares The number of shares to burn.
-    function _withdraw(address caller, address receiver, address owner, uint256 assets, uint256 shares)
-        internal
-        override
-    {
+    function _withdraw(
+        address caller,
+        address receiver,
+        address owner,
+        uint256 assets,
+        uint256 shares
+    ) internal override {
         if (caller != owner) {
             _spendAllowance(owner, caller, shares);
         }
@@ -536,9 +607,15 @@ contract Vault is
         VaultStorage storage $ = _getVaultStorage();
         address _connector = $._connectorRegistry.getOrRevert($._connectorName);
         uint256 _balanceBefore = IERC20(asset()).balanceOf(address(this));
-        _connector.functionDelegateCall(abi.encodeCall(IConnector.withdraw, (IERC20(asset()), assets)));
+        _connector.functionDelegateCall(
+            abi.encodeCall(IConnector.withdraw, (IERC20(asset()), assets))
+        );
 
-        SafeERC20.safeTransfer(IERC20(asset()), receiver, IERC20(asset()).balanceOf(address(this)) - _balanceBefore);
+        SafeERC20.safeTransfer(
+            IERC20(asset()),
+            receiver,
+            IERC20(asset()).balanceOf(address(this)) - _balanceBefore
+        );
 
         $._lastTotalAssets = totalAssets();
 
@@ -554,40 +631,60 @@ contract Vault is
     /// @dev Internal function to retrieve the max mintable amount.
     /// @param newTotalAssets The Vault's total assets.
     /// @param newTotalSupply The (shares) total supply.
-    function _maxMint(uint256 newTotalAssets, uint256 newTotalSupply) internal view returns (uint256) {
+    function _maxMint(
+        uint256 newTotalAssets,
+        uint256 newTotalSupply
+    ) internal view returns (uint256) {
         uint256 _maxDepositable = _maxDeposit();
 
         if (_maxDepositable == type(uint256).max - 1) {
             return type(uint256).max - 1;
         }
 
-        return _convertToShares(_maxDepositable, Math.Rounding.Floor, newTotalAssets, newTotalSupply);
+        return
+            _convertToShares(
+                _maxDepositable,
+                Math.Rounding.Floor,
+                newTotalAssets,
+                newTotalSupply
+            );
     }
 
     /// @dev Internal function to retrieve the max withdrawable amount for a given owner.
     /// @param owner The owner of the shares.
     function _maxWithdraw(address owner) internal view returns (uint256) {
-        return Math.min(_getConnector().maxWithdraw(IERC20(asset())), previewRedeem(balanceOf(owner)));
+        return
+            Math.min(
+                _getConnector().maxWithdraw(IERC20(asset())),
+                previewRedeem(balanceOf(owner))
+            );
     }
 
     /// @dev Internal function to retrieve the max redeemable amount for a given owner.
     /// @param owner The owner of the shares.
     /// @param newTotalAssets The Vault's total assets.
     /// @param newTotalSupply The (shares) total supply.
-    function _maxRedeem(address owner, uint256 newTotalAssets, uint256 newTotalSupply)
-        internal
-        view
-        returns (uint256)
-    {
+    function _maxRedeem(
+        address owner,
+        uint256 newTotalAssets,
+        uint256 newTotalSupply
+    ) internal view returns (uint256) {
         uint256 _maxWithdrawable = _getConnector().maxWithdraw(IERC20(asset()));
 
         if (_maxWithdrawable == type(uint256).max - 1) {
             return balanceOf(owner);
         }
 
-        return Math.min(
-            _convertToShares(_maxWithdrawable, Math.Rounding.Floor, newTotalAssets, newTotalSupply), balanceOf(owner)
-        );
+        return
+            Math.min(
+                _convertToShares(
+                    _maxWithdrawable,
+                    Math.Rounding.Floor,
+                    newTotalAssets,
+                    newTotalSupply
+                ),
+                balanceOf(owner)
+            );
     }
 
     /// @dev Estimates the number of shares mintable from a given deposit and the associated management fee.
@@ -596,20 +693,28 @@ contract Vault is
     /// @param supply The (shares) total supply.
     /// @return shares The number of shares that can be minted from the deposited assets, after deducting the management fee.
     /// @return managementFeeAmount The amount of management fee in asset terms, calculated based on the deposit amount.
-    function _previewDeposit(uint256 assets, uint256 newTotalAssets, uint256 supply)
-        internal
-        view
-        returns (uint256 shares, uint256 managementFeeAmount)
-    {
+    function _previewDeposit(
+        uint256 assets,
+        uint256 newTotalAssets,
+        uint256 supply
+    ) internal view returns (uint256 shares, uint256 managementFeeAmount) {
         VaultStorage storage $ = _getVaultStorage();
 
         // Calculate the management fee amount.
         // This is a portion of the deposited assets, scaled by the management fee rate and adjusted for the asset's decimals.
-        managementFeeAmount = assets.mulDiv($._managementFee, _MAX_PERCENT * 10 ** IERC20Metadata(asset()).decimals());
+        managementFeeAmount = assets.mulDiv(
+            $._managementFee,
+            _MAX_PERCENT * 10 ** IERC20Metadata(asset()).decimals()
+        );
 
         // Convert the net asset amount (after deducting the management fee) to shares.
         // The conversion uses floor rounding to determine the number of shares that can be minted.
-        shares = _convertToShares(assets - managementFeeAmount, Math.Rounding.Floor, newTotalAssets, supply);
+        shares = _convertToShares(
+            assets - managementFeeAmount,
+            Math.Rounding.Floor,
+            newTotalAssets,
+            supply
+        );
     }
 
     /// @dev Estimates the asset amount and management fee for minting a specified number of shares.
@@ -618,24 +723,30 @@ contract Vault is
     /// @param supply The (shares) total supply.
     /// @return assets The total amount of assets required to mint the specified number of shares, including the management fee.
     /// @return managementFeeAmount The amount of management fee in asset terms deducted when minting the shares.
-    function _previewMint(uint256 shares, uint256 newTotalAssets, uint256 supply)
-        internal
-        view
-        returns (uint256 assets, uint256 managementFeeAmount)
-    {
+    function _previewMint(
+        uint256 shares,
+        uint256 newTotalAssets,
+        uint256 supply
+    ) internal view returns (uint256 assets, uint256 managementFeeAmount) {
         VaultStorage storage $ = _getVaultStorage();
         uint256 _managementFee = $._managementFee;
         uint256 _decimals = IERC20Metadata(asset()).decimals();
 
         // Convert the number of shares to assets with ceiling rounding.
         // This gives us a raw asset value equivalent to the shares before considering management fees.
-        uint256 _rawAssetValue = _convertToAssets(shares, Math.Rounding.Ceil, newTotalAssets, supply);
+        uint256 _rawAssetValue = _convertToAssets(
+            shares,
+            Math.Rounding.Ceil,
+            newTotalAssets,
+            supply
+        );
 
         // To ensure accuracy in calculations, it's necessary to scale values up.
         uint256 _scaledRawAssetValue = _rawAssetValue * 10 ** _decimals;
 
         // The management fee is deducted from the maximum percent scale adjusted for decimals.
-        uint256 _adjustedMaxPercent = (_MAX_PERCENT * 10 ** _decimals) - _managementFee;
+        uint256 _adjustedMaxPercent = (_MAX_PERCENT * 10 ** _decimals) -
+            _managementFee;
 
         // Calculate the assets required to mint the shares, including the management fee.
         //
@@ -645,30 +756,50 @@ contract Vault is
         //
         // Note: _managementFee is already scaled to asset decimals.
         //
-        assets = _scaledRawAssetValue.mulDiv(_MAX_PERCENT, _adjustedMaxPercent, Math.Rounding.Ceil);
+        assets = _scaledRawAssetValue.mulDiv(
+            _MAX_PERCENT,
+            _adjustedMaxPercent,
+            Math.Rounding.Ceil
+        );
 
         // Calculate the management fee amount from the assets required to mint the shares.
-        managementFeeAmount = assets.mulDiv(_managementFee, _MAX_PERCENT * 10 ** _decimals, Math.Rounding.Floor);
+        managementFeeAmount = assets.mulDiv(
+            _managementFee,
+            _MAX_PERCENT * 10 ** _decimals,
+            Math.Rounding.Floor
+        );
     }
 
     /// @dev Variant of  _convertToShares from ERC4626Upgradeable but taking the totalAssets/totalSupply
     ///      parameters instead of calling `totalAssets()` and `totalSupply()`.
-    function _convertToShares(uint256 assets, Math.Rounding rounding, uint256 total, uint256 supply)
-        internal
-        view
-        returns (uint256)
-    {
-        return assets.mulDiv(supply + 10 ** _decimalsOffset(), total + 1, rounding);
+    function _convertToShares(
+        uint256 assets,
+        Math.Rounding rounding,
+        uint256 total,
+        uint256 supply
+    ) internal view returns (uint256) {
+        return
+            assets.mulDiv(
+                supply + 10 ** _decimalsOffset(),
+                total + 1,
+                rounding
+            );
     }
 
     /// @dev Variant of _convertToAssets from ERC4626Upgradeable but taking the totalAssets/totalSupply
     ///      parameters instead of calling `totalAssets()` and `totalSupply()`.
-    function _convertToAssets(uint256 shares, Math.Rounding rounding, uint256 total, uint256 supply)
-        internal
-        view
-        returns (uint256)
-    {
-        return shares.mulDiv(total + 1, supply + 10 ** _decimalsOffset(), rounding);
+    function _convertToAssets(
+        uint256 shares,
+        Math.Rounding rounding,
+        uint256 total,
+        uint256 supply
+    ) internal view returns (uint256) {
+        return
+            shares.mulDiv(
+                total + 1,
+                supply + 10 ** _decimalsOffset(),
+                rounding
+            );
     }
 
     /// @inheritdoc ERC4626Upgradeable
@@ -705,13 +836,18 @@ contract Vault is
 
         if (_performance != 0 && $._performanceFee != 0) {
             uint256 _performanceFeeAmount = _performance.mulDiv(
-                $._performanceFee, _MAX_PERCENT * 10 ** IERC20Metadata(asset()).decimals(), Math.Rounding.Floor
+                $._performanceFee,
+                _MAX_PERCENT * 10 ** IERC20Metadata(asset()).decimals(),
+                Math.Rounding.Floor
             );
 
             // Performance fee is subtracted from the total assets as it's already increased by total interest
             // (including performance fee).
             performanceFeeShares = _convertToShares(
-                _performanceFeeAmount, Math.Rounding.Floor, newTotalAssets - _performanceFeeAmount, totalSupply()
+                _performanceFeeAmount,
+                Math.Rounding.Floor,
+                newTotalAssets - _performanceFeeAmount,
+                totalSupply()
             );
         }
     }
@@ -730,7 +866,10 @@ contract Vault is
     /* -------------------------------------------------------------------------- */
 
     /// @inheritdoc ERC20Upgradeable
-    function transfer(address to, uint256 value)
+    function transfer(
+        address to,
+        uint256 value
+    )
         public
         override(ERC20Upgradeable, IERC20)
         whenTransferable
@@ -743,7 +882,11 @@ contract Vault is
     }
 
     /// @inheritdoc ERC20Upgradeable
-    function transferFrom(address from, address to, uint256 value)
+    function transferFrom(
+        address from,
+        address to,
+        uint256 value
+    )
         public
         override(ERC20Upgradeable, IERC20)
         whenTransferable
@@ -757,7 +900,10 @@ contract Vault is
     }
 
     /// @inheritdoc ERC20Upgradeable
-    function approve(address spender, uint256 value)
+    function approve(
+        address spender,
+        uint256 value
+    )
         public
         override(ERC20Upgradeable, IERC20)
         whenTransferable
@@ -778,10 +924,17 @@ contract Vault is
     }
 
     /// @notice Collects the performance fees
-    function collectPerformanceFees() external nonReentrant onlyRole(FEE_MANAGER_ROLE) {
+    function collectPerformanceFees()
+        external
+        nonReentrant
+        onlyRole(FEE_MANAGER_ROLE)
+    {
         VaultStorage storage $ = _getVaultStorage();
 
-        (uint256 _performanceFeeShares, uint256 _newTotalAssets) = _accruedPerformanceFeeShares();
+        (
+            uint256 _performanceFeeShares,
+            uint256 _newTotalAssets
+        ) = _accruedPerformanceFeeShares();
 
         uint256 _collectable = _convertToAssets(
             $._collectablePerformanceFeesShares + _performanceFeeShares,
@@ -793,9 +946,13 @@ contract Vault is
 
         uint256 _balanceBefore = IERC20(asset()).balanceOf(address(this));
         address _connector = $._connectorRegistry.getOrRevert($._connectorName);
-        _connector.functionDelegateCall(abi.encodeCall(IConnector.withdraw, (IERC20(asset()), _collectable)));
+        _connector.functionDelegateCall(
+            abi.encodeCall(IConnector.withdraw, (IERC20(asset()), _collectable))
+        );
 
-        _incrementPendingPerformanceFee(IERC20(asset()).balanceOf(address(this)) - _balanceBefore);
+        _incrementPendingPerformanceFee(
+            IERC20(asset()).balanceOf(address(this)) - _balanceBefore
+        );
 
         _burn(address(this), $._collectablePerformanceFeesShares);
         $._collectablePerformanceFeesShares = 0;
@@ -810,17 +967,19 @@ contract Vault is
     /// @dev Additional rewards are considered as yield, where the performance fee can be applied.
     /// @param rewardsAsset The rewards asset to claim.
     /// @param payload The payload to pass to the connector.
-    function claimAdditionalRewards(address rewardsAsset, bytes calldata payload)
-        external
-        nonReentrant
-        onlyRole(CLAIM_MANAGER_ROLE)
-    {
+    function claimAdditionalRewards(
+        address rewardsAsset,
+        bytes calldata payload
+    ) external nonReentrant onlyRole(CLAIM_MANAGER_ROLE) {
         VaultStorage storage $ = _getVaultStorage();
 
         uint256 _totalAssetsBefore = totalAssets();
         address _connector = $._connectorRegistry.getOrRevert($._connectorName);
         _connector.functionDelegateCall(
-            abi.encodeCall(IConnector.claim, (IERC20(asset()), IERC20(rewardsAsset), payload))
+            abi.encodeCall(
+                IConnector.claim,
+                (IERC20(asset()), IERC20(rewardsAsset), payload)
+            )
         );
 
         uint256 _totalAssets = totalAssets();
@@ -839,7 +998,9 @@ contract Vault is
 
     /// @notice Sets the sanctions list.
     /// @param newSanctionsList The new sanctions list.
-    function setSanctionsList(ISanctionsList newSanctionsList) external onlyRole(SANCTIONS_MANAGER_ROLE) {
+    function setSanctionsList(
+        ISanctionsList newSanctionsList
+    ) external onlyRole(SANCTIONS_MANAGER_ROLE) {
         _setSanctionsList(newSanctionsList);
     }
 
@@ -847,7 +1008,10 @@ contract Vault is
     /// @param addr The address to check.
     function _notSanctioned(address addr) internal view {
         ISanctionsList _sanctionsList = _getVaultStorage()._sanctionsList;
-        if (address(_sanctionsList) != address(0) && _sanctionsList.isSanctioned(addr)) {
+        if (
+            address(_sanctionsList) != address(0) &&
+            _sanctionsList.isSanctioned(addr)
+        ) {
             revert AddressSanctioned(addr);
         }
     }
@@ -872,20 +1036,26 @@ contract Vault is
 
     /// @notice Sets the fee recipients.
     /// @param recipients The new fee recipients.
-    function setFeeRecipients(FeeRecipient[] memory recipients) external onlyRole(FEE_MANAGER_ROLE) {
+    function setFeeRecipients(
+        FeeRecipient[] memory recipients
+    ) external onlyRole(FEE_MANAGER_ROLE) {
         _setFeeRecipients(recipients, IERC20Metadata(asset()).decimals());
     }
 
     /// @notice Sets the management fee.
     /// @param newManagementFee The new management fee.
-    function setManagementFee(uint256 newManagementFee) external onlyRole(FEE_MANAGER_ROLE) {
+    function setManagementFee(
+        uint256 newManagementFee
+    ) external onlyRole(FEE_MANAGER_ROLE) {
         _setManagementFee(newManagementFee);
     }
 
     /// @notice Sets the performance fee.
     /// @dev This function also collects the last performance fees prior to updating the fee.
     /// @param newPerformanceFee The new performance fee.
-    function setPerformanceFee(uint256 newPerformanceFee) external onlyRole(FEE_MANAGER_ROLE) {
+    function setPerformanceFee(
+        uint256 newPerformanceFee
+    ) external onlyRole(FEE_MANAGER_ROLE) {
         // Accrue the last performance fees prior to updating the fee amount.
         VaultStorage storage $ = _getVaultStorage();
         $._lastTotalAssets = _accruePerformanceFee();
@@ -900,7 +1070,10 @@ contract Vault is
     /// @dev Internal logic to set the performance fee.
     /// @param newPerformanceFee The new performance fee.
     function _setPerformanceFee(uint256 newPerformanceFee) internal {
-        if (newPerformanceFee > _MAX_FEE * 10 ** IERC20Metadata(asset()).decimals()) {
+        if (
+            newPerformanceFee >
+            _MAX_FEE * 10 ** IERC20Metadata(asset()).decimals()
+        ) {
             revert WrongPerformanceFee(newPerformanceFee);
         }
         _getVaultStorage()._performanceFee = newPerformanceFee;
@@ -910,7 +1083,10 @@ contract Vault is
     /// @dev Internal logic to set the management fee.
     /// @param newManagementFee The new management fee.
     function _setManagementFee(uint256 newManagementFee) internal {
-        if (newManagementFee > _MAX_FEE * 10 ** IERC20Metadata(asset()).decimals()) {
+        if (
+            newManagementFee >
+            _MAX_FEE * 10 ** IERC20Metadata(asset()).decimals()
+        ) {
             revert WrongManagementFee(newManagementFee);
         }
         _getVaultStorage()._managementFee = newManagementFee;
@@ -919,9 +1095,12 @@ contract Vault is
 
     /// @notice Internal logic to set the connector registry.
     /// @param newConnectorRegistry The new connector registry.
-    function _setConnectorRegistry(IConnectorRegistry newConnectorRegistry) internal {
+    function _setConnectorRegistry(
+        IConnectorRegistry newConnectorRegistry
+    ) internal {
         VaultStorage storage $ = _getVaultStorage();
-        if (address(newConnectorRegistry).code.length == 0) revert AddressNotContract(address(newConnectorRegistry));
+        if (address(newConnectorRegistry).code.length == 0)
+            revert AddressNotContract(address(newConnectorRegistry));
         $._connectorRegistry = newConnectorRegistry;
         emit ConnectorRegistryUpdated(newConnectorRegistry);
     }
@@ -930,7 +1109,8 @@ contract Vault is
     /// @param newConnectorName The new connector name.
     function _setConnectorName(bytes32 newConnectorName) internal {
         VaultStorage storage $ = _getVaultStorage();
-        if (!$._connectorRegistry.connectorExists(newConnectorName)) revert InvalidConnectorName(newConnectorName);
+        if (!$._connectorRegistry.connectorExists(newConnectorName))
+            revert InvalidConnectorName(newConnectorName);
         $._connectorName = newConnectorName;
         emit ConnectorNameUpdated(newConnectorName);
     }
@@ -1003,10 +1183,20 @@ contract Vault is
     /// @notice Returns the collectable performance fees (when calling `collectPerformanceFees`).
     /// @return collectablePerformanceFees The amount of performance fees that can be collected by the FeeManager.
     function collectablePerformanceFees() external view returns (uint256) {
-        (uint256 _accruedShares, uint256 _newTotalAssets) = _accruedPerformanceFeeShares();
-        uint256 _totalShares = _accruedShares + _getVaultStorage()._collectablePerformanceFeesShares;
+        (
+            uint256 _accruedShares,
+            uint256 _newTotalAssets
+        ) = _accruedPerformanceFeeShares();
+        uint256 _totalShares = _accruedShares +
+            _getVaultStorage()._collectablePerformanceFeesShares;
 
-        return _convertToAssets(_totalShares, Math.Rounding.Floor, _newTotalAssets, totalSupply() + _accruedShares);
+        return
+            _convertToAssets(
+                _totalShares,
+                Math.Rounding.Floor,
+                _newTotalAssets,
+                totalSupply() + _accruedShares
+            );
     }
 
     /// @notice Returns the sanctions list.
@@ -1025,8 +1215,8 @@ contract Vault is
     /*                              RESERVE CONTRACT                              */
     /* -------------------------------------------------------------------------- */
 
-    /// @notice 
-   struct Reserve {
+    /// @notice
+    struct Reserve {
         address owner;
         uint256 id;
         uint256 amount;
@@ -1036,27 +1226,20 @@ contract Vault is
         address oracleSpot; // callback
     }
 
+    address reserveFactory;
     mapping(uint256 => address) public reservesContracts;
     uint256 public reserveCounter = 0;
 
-
     uint256 internal constant _LOCKED_EXCHANGE_RATE = 112;
-    uint8 internal constant _PERIOD = 90;
-    uint16 internal constant _END_DATE = block.timestamp + 90;
-    /// @dev -2 blocks before end of forward settlement
-    uint16 internal constant _SETUP_DATE = _END_DATE - 2;
+    uint256 internal _END_DATE;
+    uint256 internal _SETUP_DATE;
 
-    /// @notice Function to allow bank to launch a new forward with new terms
-    function newForwardRate(uint256 contractId) public {
-        Reserve current = reservesContracts[contractId];
-        require(reservesContracts[contractId] != address(0), "Reserve contract does not exist");
-
-        if (block.timestamp > _SETUP_DATE) {
-            // Banks should calculate new amount as Underlying_assets_Value + APY_Vault_Value * pro_rata
-            address reserve = reserveSetUp();
-        }
+    constructor(address _reserveFactory) {
+        _reserveFactory = _reserveFactory;
+        _SETUP_DATE = _END_DATE - 2;
+        _END_DATE = block.timestamp + 90 days;
     }
-
+    
     /// @notice Create new forward contract object
     function reserveSetUp(uint256 amount, uint256 lockedExchangeRate, uint256 endDate) internal returns (address) {
         Reserve reserve = Reserve({
@@ -1068,10 +1251,37 @@ contract Vault is
             oracleSpot: 1, // TODO TN
             oracleForward: 1 // TODO T0
         });
+        bytes memory data = abi.encodeWithSelector(
+            ReserveFactory.createReserve.selector,
+            ReserveContract.reserveParams({
+            owner: reserve.owner,
+            id: reserve.id,
+            amount: reserve.amount,
+            lockedExchangeRate: reserve.lockedExchangeRate,
+            endDate: reserve.endDate,
+            oracleForward: reserve.oracleForward,
+            oracleSpot: reserve.oracleSpot
+            }),
+            bytes32(reserveCounter)
+        );
+        (bool success, bytes memory returnData) = reserveFactory.call(data);
+        require(success, "Reserve creation failed");
+        address reserveAddr = abi.decode(returnData, (address));
         // TODO Know how to call that function
         reservesContracts[reserveCounter] = reserveAddr;
         reserveCounter++;
         return reserveAddr;
+    }
+
+    /// @notice Function to allow bank to launch a new forward with new terms
+    function newForwardRate(uint256 contractId) public {
+        Reserve current = reservesContracts[contractId];
+        require(reservesContracts[contractId] != address(0), "Reserve contract does not exist");
+    
+        if (block.timestamp > _SETUP_DATE) {
+            // Banks should calculate new amount as Underlying_assets_Value + APY_Vault_Value * pro_rata
+            address reserve = reserveSetUp();
+        }
     }
 
     /// @notice Get the value of the new rate
@@ -1082,13 +1292,12 @@ contract Vault is
     //    return value;
     //}
 
-   function totalAssets () {
-       //UnderlyingAssets.TotalAssets + (somme de tous les forwardvalue) : GetForwardValue(UnderlyingAssets.TotalAssets)
-   } 
-//
-   // function withdraw() {
-   //     //uint256 prorata = amount 
-//
-   // }
+    //function totalAssets () {
+    //    //UnderlyingAssets.TotalAssets + (somme de tous les forwardvalue) : GetForwardValue(UnderlyingAssets.TotalAssets)
+    //}
+    //
+    // function withdraw() {
+    //     //uint256 prorata = amount
+    //
+    // }
 }
-
