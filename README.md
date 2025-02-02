@@ -2,7 +2,6 @@
 # **[Kiln](https://www.kiln.fi/)** - **S**wap **O**ptimize **S**ecure 
 ## 💻 Hackathon Project
 
-
 👋 Welcome to our project for [Kiln Hackathon #1](https://www.kiln.fi/kiln-hackathon), held from January 31 to February 2, 2025, at the Kiln Office in **Paris**.
 
 The goal was to create a project around [Kiln products](https://pitch.com/v/kilns-first-hackathon-welcome-j9hhy7/bbc26246-cd72-4ee3-83a7-19a8cec75c99), specifically :
@@ -13,7 +12,7 @@ The goal was to create a project around [Kiln products](https://pitch.com/v/kiln
 - OnChain: An audited suite of smart contracts that enables platforms to offer fully branded, customizable, non-custodial Ethereum staking to end-users, with automated rewards dispatch and optional transferability capabilities.
 - Dashboard: A comprehensive web interface that allows users to stake assets across major PoS chains with a single click, monitor rewards, manage team accounts, and generate detailed reports.
 
-We decided to worked on **Widget** and **DeFi** themes.
+We decided to work on **Widget** and **DeFi** themes, and we got 1st place in **Widget** :trophy:.
 
 ## 🚀 Our product
 We built SOS for **Swap.Optimize.Secure**. We have extended the Vault Deposit process to allow for the management of off-chain financial products underwitten with CeFi or DeFi entities and used to hedge currency risks.
@@ -21,7 +20,7 @@ Added on top of Kiln Widget, an option offers the investor the oppportunity to a
 Investors can :
 - deposit any token in the vault,
 - select the underlying DeFi investment vault,
-- **choose the stablecoin used to hedge their currency exposure** and paid at withdrawal.
+- I**choose the stablecoin used to hedge their currency exposure** and paid at withdrawal.
 
 ## ⚙️ Our work
 - Contracts (OracleForward, ReserveFactory, Vault (Reserve part + little modification)).
