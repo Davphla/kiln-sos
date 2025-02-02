@@ -16,12 +16,12 @@ We decided to worked on **Widget** and **DeFi** themes.
 
 ## Our work ⚙️
 - Contracts (OracleForward, ReserveFactory, Vault (Reserve part + little modification)).
-- [Front-end](davphla.github.io/kiln-sos/) - Reproduced and modified interface to show the integration of our project.
+- [Front-end](https://davphla.github.io/kiln-sos/) - Reproduced and modified interface to show the integration of our project.
 - Back-end (Bank simulation) - Simulate to work with Oracle (Not used).
 
 # Deep inside 🚀
 
-![image](https://github.com/user-attachments/assets/4da7193b-9d30-4e5d-8f2d-9b1de883365f)
+![image](https://github.com/user-attachments/assets/61875ce8-fd48-4852-8f28-6193145d5a01)
 
 ![image](https://github.com/user-attachments/assets/9b0f82cb-a39a-45d5-91c5-10c4552c2a0b)
 
