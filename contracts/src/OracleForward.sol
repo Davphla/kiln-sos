@@ -5,6 +5,9 @@
 // You would need to use an oracle service like Chainlink to call an external API
 // Example using Chainlink's request and response pattern
 // Import ChainlinkClient
+
+// This is unfinished, it just simulate a value of Oracle Forward.
+// It should request URL of a bank, or any to get their forward tax
 pragma solidity 0.8.22;
 
 import "../lib/chainlink-brownie-contracts/contracts/src/v0.8/ChainlinkClient.sol";

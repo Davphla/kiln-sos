@@ -9,7 +9,7 @@
 
 
 ## Parts
-- contracts (ERC 4626 + vault)
+- contracts (OracleForward, ReserveFactory)
 - back-end (Bank simulation)
 - front-end
 
