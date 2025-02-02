@@ -69,7 +69,7 @@
         </div>
 
         <hr/>
-        <p>Currency withdraw</p>
+        <p class="withdraw-title" data-tooltip="Cover your currency exchange risk by locking now the future conversion.">Currency withdraw</p>
         <div class="withdraw-section">
             <div class="withdraw-row">
                 <div class="currency-selector">
@@ -77,7 +77,11 @@
                     <span>USDC</span>
                     <span class="dropdown-arrow">▼</span>
                 </div>
-                <div id="slider"></div>
+                <div id="slider">
+                    <div id="slider-title">Investment Horizon</div>
+                    <div id="serrated-slider"></div>
+                    <div id="slider-value">1 week</div>
+                </div>
             </div>
             <div class="hedge-section">
                 <div class="hedge-left">
@@ -90,7 +94,7 @@
                 <div class="hedge-right">
                     <div class="reward-net">
                         <span class="reward-label">Estimated net</span>
-                        <span class="reward-value">10.24%</span>
+                        <span class="reward-value">--</span>
                     </div>
                 </div>
             </div>
@@ -148,7 +152,8 @@
     <script src="script.js"></script>
     <script>
         $(function() {
-            $("#slider").slider({
+            const periods = ["1 week", "1 month", "2 months", "3 months", "6 months", "9 months", "1 year"];
+            $("#serrated-slider").slider({
                 min: 0,
                 max: 100,
                 step: 16.66,
@@ -158,6 +163,10 @@
                         var position = (i * 16.66) + '%';
                         $('<span class="tick-mark"></span>').css('left', position).appendTo($(this));
                     }
+                },
+                slide: function(event, ui) {
+                    const index = Math.round(ui.value / 16.66);
+                    $("#slider-value").text(periods[index]);
                 }
             });
         });
