@@ -35,10 +35,10 @@ We decided to worked on **Widget** and **DeFi** themes.
 
 ## Contributors 🏆
 
-| Contributors    | Contributions                     |
-|-----------------|-----------------------------------|
-| Alexis          | Ideation, graph and contracts.    |
-| Etienne         | Frontend and Backend.             |
-| David           | Contracts.                        |
+| Contributors        | Contributions                     |
+|---------------------|-----------------------------------|
+| Alexis Bourdillat   | Ideation, graph and contracts.    |
+| Etienne Desaintjean | Frontend and Backend.             |
+| David Gozlan        | Contracts.                        |
 
 
