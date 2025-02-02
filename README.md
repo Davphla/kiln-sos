@@ -14,6 +14,14 @@ The goal was to create a project around [Kiln products]((https://pitch.com/v/kil
 
 We decided to worked on **Widget** and **DeFi** themes.
 
+## Our product
+We built SOS for **Swap.Optimize.Secure**. We have extended the Vault Deposit process to allow for the management of off-chain financial products underwitten with CeFi or DeFi entities and used to hedge currency risks.
+Added on top of Kiln Widget, an option offers the investor the oppportunity to access the highest yield in DeFi expressed in their preferred domestic currency.
+Investors can :
+- deposit any token in the vault,
+- select the underlying DeFi investment vault,
+- **choose the stablecoin used to hedge their currency exposure** and paid at withdrawal.
+
 ## Our work ⚙️
 - Contracts (OracleForward, ReserveFactory, Vault (Reserve part + little modification)).
 - [Front-end](https://davphla.github.io/kiln-sos/) - Reproduced and modified interface to show the integration of our project.
