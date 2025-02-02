@@ -1,0 +1,33 @@
+[profile.default]
+solc_version = "0.8.22"  # Adjust based on your project's Solidity version
+evm_version = "paris"
+via_ir = false
+
+# Optimizer settings
+optimizer = true
+optimizer_runs = 200
+
+# Metadata settings
+cbor_metadata = true  # Equivalent to "appendCBOR": true
+bytecode_hash = "ipfs"  # Equivalent to "bytecodeHash": "ipfs"
+
+# Remappings
+remappings = [
+    "forge-std/=lib/forge-std/src/",
+    "@openzeppelin/=lib/openzeppelin-contracts/contracts/",
+    "@openzeppelin-upgradeable/=lib/openzeppelin-contracts-upgradeable/contracts/",
+    "vulcan/=lib/vulcan/src/",
+    "deploy.sol/=lib/deploy.sol/src/",
+    "@openzeppelin/contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/contracts/",
+    "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
+    "ds-test/=lib/vulcan/lib/forge-std/lib/ds-test/src/",
+    "erc4626-tests/=lib/openzeppelin-contracts-upgradeable/lib/erc4626-tests/",
+    "openzeppelin-contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/",
+    "openzeppelin-contracts/=lib/openzeppelin-contracts/",
+    "solmate/=lib/deploy.sol/lib/solmate/src/",
+    "@chainlink/=lib/chainlink-brownie-contracts/",
+    "chainlink-brownie-contracts/=lib/foundry-chainlink-toolkit/lib/chainlink-brownie-contracts/contracts/src/v0.6/vendor/@arbitrum/nitro-contracts/src/",
+    "foundry-chainlink-toolkit/=lib/foundry-chainlink-toolkit/",
+    "halmos-cheatcodes/=lib/openzeppelin-contracts-upgradeable/lib/halmos-cheatcodes/src/",
+]
+
