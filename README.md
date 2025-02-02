@@ -46,8 +46,8 @@ Investors can :
 
 | Contributors        | Contributions                     |
 |---------------------|-----------------------------------|
-| Alexis Bourdillat   | Ideation, graph and contracts.    |
-| Etienne Desaintjean | Frontend and Backend.             |
-| David Gozlan        | Contracts.                        |
+| [Alexis Bourdillat](https://www.linkedin.com/in/alexisbourdillat/)   | Ideation, graph and contracts.    |
+| [Etienne Desaintjean](https://github.com/afuma) | Frontend and Backend.             |
+| [David Gozlan](https://github.com/Davphla)        | Contracts.                        |
 
 
