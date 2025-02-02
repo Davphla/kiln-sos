@@ -28,7 +28,7 @@ We decided to worked on **Widget** and **DeFi** themes.
 ![image](https://github.com/user-attachments/assets/f6c492d8-fce3-4e9a-90a2-40b2d91d44ba)
 
 
-## Useful Link
+## Useful Links
 - https://widget.kiln.fi/earn
 - https://docs.kiln.fi/v1/kiln-products/defi/security/source-code
 - https://docs.google.com/spreadsheets/d/1fd3fFAIEYYzzN1j7Jw_hNhld6Cs8j1-bK-ngO57i3FQ/edit?gid=0#gid=0
