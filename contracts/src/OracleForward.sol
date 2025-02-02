@@ -30,7 +30,7 @@ contract Vault is ChainlinkClient {
     }
 
     // Create a Chainlink request to retrieve API data
-    function _createOracleForward(uint256 forward_id) internal {
+    function _createOracleForward(uint256 forwardId) internal {
         Chainlink.Request memory request = _buildChainlinkRequest(
             jobId,
             address(this),
@@ -38,7 +38,6 @@ contract Vault is ChainlinkClient {
         );
         // Set the URL to perform the GET request on
         request._add("get", API_URL);
-        request._add("path", URL_PATH);
         _sendChainlinkRequestTo(oracle, request, fee);
     }
 

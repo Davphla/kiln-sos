@@ -85,15 +85,16 @@ contract ReserveFactory {
                 oracleForward: params.oracleForward
             });
 
+        ReserveContract newContract = new ReserveContract(msg.sender, initializationParams);
+        deployedReserves.push(newContract);
+
         bytes memory bytecode = abi.encodePacked(
             type(ReserveContract).creationCode,
-            abi.encode(msg.sender, initializationParams)
+            abi.encode(newContract)
         );
-
         address payable _newReserve = payable(Create2.deploy(0, salt, bytecode));
 
-        //deployedReserves.push(Reserve(_newVault));
-        emit ReserveCreated(_newReserve, params.id);
+        emit ReserveCreated(address(_newReserve), params.id);
         //return _newVault;
         return _newReserve;
     }
