@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 // Oracle logic to call an external API
 // This is a placeholder for the actual implementation
 // You would need to use an oracle service like Chainlink to call an external API
