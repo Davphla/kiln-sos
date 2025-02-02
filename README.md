@@ -3,9 +3,9 @@
 **Theme** : Widget / DeFi
 
 ## Useful Link
-https://widget.kiln.fi/earn
-https://docs.kiln.fi/v1/kiln-products/defi/security/source-code
-https://docs.google.com/spreadsheets/d/1fd3fFAIEYYzzN1j7Jw_hNhld6Cs8j1-bK-ngO57i3FQ/edit?gid=0#gid=0
+- https://widget.kiln.fi/earn
+- https://docs.kiln.fi/v1/kiln-products/defi/security/source-code
+- https://docs.google.com/spreadsheets/d/1fd3fFAIEYYzzN1j7Jw_hNhld6Cs8j1-bK-ngO57i3FQ/edit?gid=0#gid=0
 
 
 ## Parts
@@ -21,7 +21,6 @@ Deploy contract
 
 ## Simulation
 Launch front-end, back-end
-
 
 Interest
 12%
