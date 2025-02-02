@@ -1,0 +1,20 @@
+# Ignore build artifacts
+out/
+artifacts/
+
+# Ignore dependency directories
+modules/
+
+# Ignore Forge cache
+.cache/
+
+# Ignore editor specific files
+.vscode/
+.idea/
+
+# Ignore OS specific files
+.DS_Store
+Thumbs.db
+
+node_modules
+contracts/cache
